@@ -1,4 +1,5 @@
-﻿using ChronoTrack.Infrastructure.Persistence;
+﻿using ChronoTrack.Application.Common.Interfaces;
+using ChronoTrack.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,8 @@ namespace ChronoTrack.Infrastructure
             {
                 options.UseNpgsql(connectionString);
             });
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
