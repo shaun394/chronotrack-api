@@ -1,9 +1,13 @@
-﻿namespace ChronoTrack.Api.Extensions
+﻿using ChronoTrack.Api.Middleware;
+
+namespace ChronoTrack.Api.Extensions
 {
     public static class WebApplicationExtensions
     {
         public static WebApplication UseApiPipeline(this WebApplication app)
         {
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
