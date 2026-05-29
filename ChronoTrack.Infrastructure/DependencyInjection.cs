@@ -1,5 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Interfaces;
+using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
 using ChronoTrack.Infrastructure.Persistence;
+using ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,8 @@ namespace ChronoTrack.Infrastructure
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IWorkspaceWriteRepository, WorkspaceWriteRepository>();
+            services.AddScoped<IWorkspaceReadRepository, WorkspaceReadRepository>();
 
             return services;
         }
