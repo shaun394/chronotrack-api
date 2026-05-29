@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="ChronoTrack.Api/ChronoTrack.Api.csproj" />
+  <Project Path="ChronoTrack.Application/ChronoTrack.Application.csproj" />
+  <Project Path="ChronoTrack.Domain/ChronoTrack.Domain.csproj" />
+  <Project Path="ChronoTrack.Infrastructure/ChronoTrack.Infrastructure.csproj" />
 </Solution>
