@@ -1,8 +1,6 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/ChronoTrack.Api/ChronoTrack.Api.csproj" />
-    <Project Path="src/ChronoTrack.Application/ChronoTrack.Application.csproj" />
-    <Project Path="src/ChronoTrack.Domain/ChronoTrack.Domain.csproj" />
-    <Project Path="src/ChronoTrack.Infrastructure/ChronoTrack.Infrastructure.csproj" />
-  </Folder>
+  <Project Path="src/ChronoTrack.Api/ChronoTrack.Api.csproj" />
+  <Project Path="src/ChronoTrack.Application/ChronoTrack.Application.csproj" />
+  <Project Path="src/ChronoTrack.Domain/ChronoTrack.Domain.csproj" />
+  <Project Path="src/ChronoTrack.Infrastructure/ChronoTrack.Infrastructure.csproj" />
 </Solution>
