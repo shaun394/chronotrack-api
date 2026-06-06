@@ -1,4 +1,5 @@
 ﻿using ChronoTrack.Domain.Clients;
+using ChronoTrack.Domain.Projects;
 using ChronoTrack.Domain.Workspaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ namespace ChronoTrack.Infrastructure.Persistence
 
         public DbSet<Workspace> Workspaces => Set<Workspace>();
         public DbSet<Client> Clients => Set<Client>();
+        public DbSet<Project> Projects => Set<Project>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
