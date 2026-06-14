@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Domain.Clients;
 using ChronoTrack.Domain.Projects;
 using ChronoTrack.Domain.Tags;
+using ChronoTrack.Domain.Tasks;
 using ChronoTrack.Domain.Workspaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace ChronoTrack.Infrastructure.Persistence
         public DbSet<Client> Clients => Set<Client>();
         public DbSet<Project> Projects => Set<Project>();
         public DbSet<Tag> Tags => Set<Tag>();
+        public DbSet<ProjectTask> ProjectTasks => Set<ProjectTask>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
