@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Interfaces.Repositories.Tags;
 using ChronoTrack.Application.ReadModels.Tags;
+using ChronoTrack.Domain.Tags;
 using MediatR;
 
 namespace ChronoTrack.Application.Tags.Queries.GetById
@@ -25,7 +26,10 @@ namespace ChronoTrack.Application.Tags.Queries.GetById
 
             if (tag is null)
             {
-                throw new NotFoundException("Tag was not found.");
+                throw new NotFoundException(
+                    nameof(Tag),
+                    query.Id,
+                    nameof(GetTagByIdQueryHandler));
             }
 
             return tag;

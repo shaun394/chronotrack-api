@@ -1,14 +1,13 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Application.ReadModels.Projects;
+using ChronoTrack.Domain.Projects;
 using MediatR;
 
 namespace ChronoTrack.Application.Projects.Queries.GetById
 {
     public sealed class GetProjectByIdQueryHandler
-        : IRequestHandler<
-            GetProjectByIdQuery,
-            ProjectReadModel>
+        : IRequestHandler<GetProjectByIdQuery, ProjectReadModel>
     {
         private readonly IProjectReadRepository _projectReadRepository;
 
@@ -27,7 +26,10 @@ namespace ChronoTrack.Application.Projects.Queries.GetById
 
             if (project is null)
             {
-                throw new NotFoundException("Project was not found.");
+                throw new NotFoundException(
+                    nameof(Project),
+                    query.Id,
+                    nameof(GetProjectByIdQueryHandler));
             }
 
             return project;

@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Tags;
+using ChronoTrack.Domain.Tags;
 using MediatR;
 
 namespace ChronoTrack.Application.Tags.Commands.Update
@@ -28,7 +29,10 @@ namespace ChronoTrack.Application.Tags.Commands.Update
 
             if (tag is null)
             {
-                throw new NotFoundException("Tag was not found.");
+                throw new NotFoundException(
+                    nameof(Tag),
+                    command.Id,
+                    nameof(UpdateTagCommandHandler));
             }
 
             tag.Update(

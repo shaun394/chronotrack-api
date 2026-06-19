@@ -3,7 +3,9 @@ using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
+using ChronoTrack.Domain.Clients;
 using ChronoTrack.Domain.Projects;
+using ChronoTrack.Domain.Workspaces;
 using MediatR;
 
 namespace ChronoTrack.Application.Projects.Commands.Create
@@ -36,7 +38,12 @@ namespace ChronoTrack.Application.Projects.Commands.Create
                 .GetByIdAsync(command.WorkspaceId, ct);
 
             if (workspace is null)
-                throw new NotFoundException("Workspace was not found.");
+            {
+                throw new NotFoundException(
+                    nameof(Workspace),
+                    command.WorkspaceId,
+                    nameof(CreateProjectCommandHandler));
+            }
 
             if (command.ClientId.HasValue)
             {
@@ -44,10 +51,12 @@ namespace ChronoTrack.Application.Projects.Commands.Create
                     .GetByIdAsync(command.ClientId.Value, ct);
 
                 if (client is null)
-                    throw new NotFoundException("Client was not found.");
-
-                if (client.WorkspaceId != command.WorkspaceId)
-                    throw new NotFoundException("Client was not found in the selected workspace");
+                {
+                    throw new NotFoundException(
+                        nameof(Client),
+                        command.ClientId.Value,
+                        nameof(CreateProjectCommandHandler));
+                }
             }
 
             var project = Project.Create(

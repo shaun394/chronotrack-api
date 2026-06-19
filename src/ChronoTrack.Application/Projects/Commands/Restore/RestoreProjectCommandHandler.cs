@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
+using ChronoTrack.Domain.Projects;
 using MediatR;
 
 namespace ChronoTrack.Application.Projects.Commands.Restore
@@ -28,7 +29,10 @@ namespace ChronoTrack.Application.Projects.Commands.Restore
 
             if (project is null)
             {
-                throw new NotFoundException("Project was not found.");
+                throw new NotFoundException(
+                    nameof(Project),
+                    command.Id,
+                    nameof(RestoreProjectCommandHandler));
             }
 
             project.Restore(

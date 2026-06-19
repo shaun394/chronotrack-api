@@ -1,5 +1,5 @@
 ﻿using ChronoTrack.Domain.Common;
-using ChronoTrack.Domain.Exceptions;
+using ChronoTrack.Domain.Common.Exceptions;
 
 namespace ChronoTrack.Domain.TimeEntries
 {
@@ -99,7 +99,9 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Removed time entries cannot be updated.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Removed time entries cannot be updated.");
             }
 
             ValidateProjectId(projectId);
@@ -125,7 +127,9 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Time entry is already removed.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Time entry is already removed.");
             }
 
             RemovedBy = actor;
@@ -136,7 +140,9 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (!IsRemoved)
             {
-                throw new DomainValidationException("Time entry is not removed.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Time entry is not removed.");
             }
 
             RemovedBy = null;
@@ -151,7 +157,9 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (workspaceId <= 0)
             {
-                throw new DomainValidationException("Workspace id is required.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Workspace id is required.");
             }
         }
 
@@ -159,7 +167,9 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (projectId <= 0)
             {
-                throw new DomainValidationException("Project id is required.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Project id is required.");
             }
         }
 
@@ -167,7 +177,9 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (projectTaskId.HasValue && projectTaskId.Value <= 0)
             {
-                throw new DomainValidationException("Project task id must be greater than 0.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Project task id must be greater than 0.");
             }
         }
 
@@ -175,7 +187,9 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (clientId.HasValue && clientId.Value <= 0)
             {
-                throw new DomainValidationException("Client id must be greater than 0.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Client id must be greater than 0.");
             }
         }
 
@@ -183,19 +197,27 @@ namespace ChronoTrack.Domain.TimeEntries
         {
             if (description?.Trim().Length > MaxDescriptionLength)
             {
-                throw new DomainValidationException($"Time entry description cannot exceed {MaxDescriptionLength} characters.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    $"Time entry description cannot exceed {MaxDescriptionLength} characters.");
             }
         }
 
-        private static void ValidateTimeRange(TimeOnly startTime, TimeOnly endTime)
+        private static void ValidateTimeRange(
+            TimeOnly startTime,
+            TimeOnly endTime)
         {
             if (startTime >= endTime)
             {
-                throw new DomainValidationException("Start time must be before end time.");
+                throw new DomainValidationException(
+                    nameof(TimeEntry),
+                    "Start time must be before end time.");
             }
         }
 
-        private static int CalculateDurationMinutes(TimeOnly startTime, TimeOnly endTime)
+        private static int CalculateDurationMinutes(
+            TimeOnly startTime,
+            TimeOnly endTime)
         {
             return (int)(endTime.ToTimeSpan() - startTime.ToTimeSpan()).TotalMinutes;
         }

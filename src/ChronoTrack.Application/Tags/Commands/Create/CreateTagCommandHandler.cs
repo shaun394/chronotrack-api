@@ -3,6 +3,7 @@ using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Tags;
 using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
 using ChronoTrack.Domain.Tags;
+using ChronoTrack.Domain.Workspaces;
 using MediatR;
 
 namespace ChronoTrack.Application.Tags.Commands.Create
@@ -33,7 +34,10 @@ namespace ChronoTrack.Application.Tags.Commands.Create
 
             if (workspace is null)
             {
-                throw new NotFoundException("Workspace was not found.");
+                throw new NotFoundException(
+                    nameof(Workspace),
+                    command.WorkspaceId,
+                    nameof(CreateTagCommandHandler));
             }
 
             var tag = Tag.Create(

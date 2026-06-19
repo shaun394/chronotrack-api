@@ -2,6 +2,7 @@
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Application.Interfaces.Repositories.Tasks;
+using ChronoTrack.Domain.Projects;
 using ChronoTrack.Domain.Tasks;
 using MediatR;
 
@@ -33,7 +34,10 @@ namespace ChronoTrack.Application.Tasks.Commands.Create
 
             if (project is null)
             {
-                throw new NotFoundException("Project was not found.");
+                throw new NotFoundException(
+                    nameof(Project),
+                    command.ProjectId,
+                    nameof(CreateProjectTaskCommandHandler));
             }
 
             var projectTask = ProjectTask.Create(
