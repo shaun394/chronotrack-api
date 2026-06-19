@@ -3,5 +3,6 @@ using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Queries.List
 {
-    public sealed record ListWorkspacesQuery : IRequest<IReadOnlyCollection<WorkspaceReadModel>>;
+    public sealed record ListWorkspacesQuery
+        : IRequest<IReadOnlyCollection<WorkspaceReadModel>>;
 }

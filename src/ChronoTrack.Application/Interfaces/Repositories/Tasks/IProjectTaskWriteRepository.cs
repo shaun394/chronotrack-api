@@ -4,8 +4,12 @@ namespace ChronoTrack.Application.Interfaces.Repositories.Tasks
 {
     public interface IProjectTaskWriteRepository
     {
-        Task AddAsync(ProjectTask projectTask, CancellationToken ct);
+        Task AddAsync(
+            ProjectTask projectTask,
+            CancellationToken ct);
 
-        Task<ProjectTask?> GetForUpdateAsync(int id, CancellationToken ct);
+        Task<ProjectTask?> GetForUpdateAsync(
+            int id,
+            CancellationToken ct);
     }
 }

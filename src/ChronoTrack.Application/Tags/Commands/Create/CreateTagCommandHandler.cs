@@ -28,7 +28,8 @@ namespace ChronoTrack.Application.Tags.Commands.Create
             CreateTagCommand command,
             CancellationToken ct)
         {
-            var workspace = await _workspaceReadRepository.GetByIdAsync(command.WorkspaceId, ct);
+            var workspace = await _workspaceReadRepository
+                .GetByIdAsync(command.WorkspaceId, ct);
 
             if (workspace is null)
             {

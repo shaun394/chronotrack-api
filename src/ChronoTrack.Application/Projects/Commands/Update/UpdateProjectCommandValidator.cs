@@ -17,6 +17,7 @@ namespace ChronoTrack.Application.Projects.Commands.Update
                 .WithMessage("Client ID must be greater than 0.");
 
             RuleFor(x => x.Name)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage("Name is required.")
                 .MaximumLength(100)

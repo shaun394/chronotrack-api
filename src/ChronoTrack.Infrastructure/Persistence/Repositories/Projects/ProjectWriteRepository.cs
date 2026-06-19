@@ -12,14 +12,18 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Projects
             _db = db;
         }
 
-        public async Task AddAsync(Project project, CancellationToken ct)
+        public async Task AddAsync(
+            Project project,
+            CancellationToken ct)
         {
             await _db.Projects.AddAsync(project, ct);
         }
 
-        public async Task<Project?> GetForUpdateAsync(int id, CancellationToken ct)
+        public async Task<Project?> GetForUpdateAsync(
+            int id,
+            CancellationToken ct)
         {
-            return await _db.Projects.FindAsync([id], ct);
+            return await _db.Projects.FindAsync(id, ct);
         }
     }
 }

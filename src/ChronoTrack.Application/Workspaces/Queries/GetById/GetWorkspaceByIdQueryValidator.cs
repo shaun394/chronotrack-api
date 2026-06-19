@@ -2,7 +2,8 @@
 
 namespace ChronoTrack.Application.Workspaces.Queries.GetById
 {
-    public sealed class GetWorkspaceByIdQueryValidator : AbstractValidator<GetWorkspaceByIdQuery>
+    public sealed class GetWorkspaceByIdQueryValidator
+        : AbstractValidator<GetWorkspaceByIdQuery>
     {
         public GetWorkspaceByIdQueryValidator()
         {

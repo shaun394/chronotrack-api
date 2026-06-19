@@ -23,7 +23,8 @@ namespace ChronoTrack.Application.Tasks.Commands.Restore
             RestoreProjectTaskCommand command,
             CancellationToken ct)
         {
-            var projectTask = await _projectTaskWriteRepository.GetForUpdateAsync(command.Id, ct);
+            var projectTask = await _projectTaskWriteRepository
+                .GetForUpdateAsync(command.Id, ct);
 
             if (projectTask is null)
             {

@@ -13,20 +13,20 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Clients
             _db = db;
         }
 
-        public async Task<ClientReadModel?> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<ClientReadModel?> GetByIdAsync(
+            int id,
+            CancellationToken ct)
         {
             return await _db.Clients
                 .AsNoTracking()
-                .Where(x => x.Id == id && x.RemovedAt == null)
+                .Where(x =>
+                    x.Id == id
+                    && x.RemovedAt == null)
                 .Select(x => new ClientReadModel
                 {
                     Id = x.Id,
                     WorkspaceId = x.WorkspaceId,
-                    Name = x.Name,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    Name = x.Name
                 })
                 .FirstOrDefaultAsync(ct);
         }
@@ -37,17 +37,15 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Clients
         {
             return await _db.Clients
                 .AsNoTracking()
-                .Where(x => x.WorkspaceId == workspaceId && x.RemovedAt == null)
+                .Where(x =>
+                    x.WorkspaceId == workspaceId
+                    && x.RemovedAt == null)
                 .OrderBy(x => x.Name)
                 .Select(x => new ClientReadModel
                 {
                     Id = x.Id,
                     WorkspaceId = x.WorkspaceId,
-                    Name = x.Name,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    Name = x.Name
                 })
                 .ToListAsync(ct);
         }

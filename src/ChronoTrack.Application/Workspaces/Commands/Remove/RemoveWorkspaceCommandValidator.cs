@@ -2,7 +2,8 @@
 
 namespace ChronoTrack.Application.Workspaces.Commands.Remove
 {
-    public sealed class RemoveWorkspaceCommandValidator : AbstractValidator<RemoveWorkspaceCommand>
+    public sealed class RemoveWorkspaceCommandValidator
+        : AbstractValidator<RemoveWorkspaceCommand>
     {
         public RemoveWorkspaceCommandValidator()
         {

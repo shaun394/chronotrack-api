@@ -6,11 +6,14 @@ using MediatR;
 namespace ChronoTrack.Application.Projects.Queries.GetById
 {
     public sealed class GetProjectByIdQueryHandler
-        : IRequestHandler<GetProjectByIdQuery, ProjectReadModel>
+        : IRequestHandler<
+            GetProjectByIdQuery,
+            ProjectReadModel>
     {
         private readonly IProjectReadRepository _projectReadRepository;
 
-        public GetProjectByIdQueryHandler(IProjectReadRepository projectReadRepository)
+        public GetProjectByIdQueryHandler(
+            IProjectReadRepository projectReadRepository)
         {
             _projectReadRepository = projectReadRepository;
         }
@@ -19,7 +22,8 @@ namespace ChronoTrack.Application.Projects.Queries.GetById
             GetProjectByIdQuery query,
             CancellationToken ct)
         {
-            var project = await _projectReadRepository.GetByIdAsync(query.Id, ct);
+            var project = await _projectReadRepository
+                .GetByIdAsync(query.Id, ct);
 
             if (project is null)
             {

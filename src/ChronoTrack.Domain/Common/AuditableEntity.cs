@@ -8,13 +8,17 @@
 
         public string CreatedBy { get; protected set; } = string.Empty;
 
-        public DateTimeOffset? UpdatedAt { get; protected set; }
+        public DateTimeOffset ModifiedAt { get; protected set; }
 
-        public string? UpdatedBy { get; protected set; }
+        public string ModifiedBy { get; protected set; } = string.Empty;
 
         public DateTimeOffset? RemovedAt { get; protected set; }
 
         public string? RemovedBy { get; protected set; }
+
+        public DateTimeOffset? RestoredAt { get; protected set; }
+
+        public string? RestoredBy { get; protected set; }
 
         public bool IsRemoved => RemovedAt.HasValue;
     }

@@ -30,13 +30,15 @@ namespace ChronoTrack.Api.Controllers
         [EndpointSummary("Create workspace")]
         [EndpointDescription("Creates a new workspace.")]
         [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<int>>> Create(
             CreateWorkspaceRequest request,
             CancellationToken ct)
         {
             int id = await _mediator.Send(
-                new CreateWorkspaceCommand(request.Name, Actor),
+                new CreateWorkspaceCommand(
+                    request.Name,
+                    request.Description,
+                    Actor),
                 ct);
 
             return CreatedAtAction(
@@ -59,30 +61,10 @@ namespace ChronoTrack.Api.Controllers
             return Ok(ApiResponse<IReadOnlyCollection<WorkspaceReadModel>>.Ok(workspaces));
         }
 
-        [HttpPut("{id:int}")]
-        [EndpointSummary("Update workspace")]
-        [EndpointDescription("Updates the name of an existing workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApiResponse<int>>> Update(
-            int id,
-            UpdateWorkspaceRequest request,
-            CancellationToken ct)
-        {
-            int workspaceId = await _mediator.Send(
-                new UpdateWorkspaceCommand(id, request.Name, Actor),
-                ct);
-
-            return Ok(ApiResponse<int>.Ok(workspaceId));
-        }
-
         [HttpGet("{id:int}")]
         [EndpointSummary("Get workspace by id")]
         [EndpointDescription("Returns a single active workspace by id.")]
         [ProducesResponseType(typeof(ApiResponse<WorkspaceReadModel>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ApiResponse<WorkspaceReadModel>>> GetById(
             int id,
             CancellationToken ct)
@@ -94,12 +76,30 @@ namespace ChronoTrack.Api.Controllers
             return Ok(ApiResponse<WorkspaceReadModel>.Ok(workspace));
         }
 
+        [HttpPut("{id:int}")]
+        [EndpointSummary("Update workspace")]
+        [EndpointDescription("Updates an existing workspace.")]
+        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<int>>> Update(
+            int id,
+            UpdateWorkspaceRequest request,
+            CancellationToken ct)
+        {
+            int workspaceId = await _mediator.Send(
+                new UpdateWorkspaceCommand(
+                    id,
+                    request.Name,
+                    request.Description,
+                    Actor),
+                ct);
+
+            return Ok(ApiResponse<int>.Ok(workspaceId));
+        }
+
         [HttpPatch("{id:int}/remove")]
         [EndpointSummary("Remove workspace")]
         [EndpointDescription("Soft deletes an existing workspace.")]
         [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ApiResponse<int>>> Remove(
             int id,
             CancellationToken ct)
@@ -115,8 +115,6 @@ namespace ChronoTrack.Api.Controllers
         [EndpointSummary("Restore workspace")]
         [EndpointDescription("Restores a previously removed workspace.")]
         [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ApiResponse<int>>> Restore(
             int id,
             CancellationToken ct)

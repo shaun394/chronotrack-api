@@ -5,7 +5,8 @@ using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Commands.Restore
 {
-    public sealed class RestoreWorkspaceCommandHandler : IRequestHandler<RestoreWorkspaceCommand, int>
+    public sealed class RestoreWorkspaceCommandHandler
+        : IRequestHandler<RestoreWorkspaceCommand, int>
     {
         private readonly IWorkspaceWriteRepository _workspaceWriteRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,9 +19,12 @@ namespace ChronoTrack.Application.Workspaces.Commands.Restore
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(RestoreWorkspaceCommand request, CancellationToken ct)
+        public async Task<int> Handle(
+            RestoreWorkspaceCommand request,
+            CancellationToken ct)
         {
-            var workspace = await _workspaceWriteRepository.GetForUpdateAsync(request.Id, ct);
+            var workspace = await _workspaceWriteRepository
+                .GetForUpdateAsync(request.Id, ct);
 
             if (workspace is null)
             {

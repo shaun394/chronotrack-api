@@ -12,14 +12,18 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Tags
             _db = db;
         }
 
-        public async Task AddAsync(Tag tag, CancellationToken ct)
+        public async Task AddAsync(
+            Tag tag,
+            CancellationToken ct)
         {
             await _db.Tags.AddAsync(tag, ct);
         }
 
-        public async Task<Tag?> GetForUpdateAsync(int id, CancellationToken ct)
+        public async Task<Tag?> GetForUpdateAsync(
+            int id,
+            CancellationToken ct)
         {
-            return await _db.Tags.FindAsync([id], ct);
+            return await _db.Tags.FindAsync(id, ct);
         }
     }
 }

@@ -23,7 +23,8 @@ namespace ChronoTrack.Application.Clients.Commands.Update
             UpdateClientCommand command,
             CancellationToken ct)
         {
-            var client = await _clientWriteRepository.GetForUpdateAsync(command.Id, ct);
+            var client = await _clientWriteRepository
+                .GetForUpdateAsync(command.Id, ct);
 
             if (client is null)
             {

@@ -5,11 +5,14 @@ using MediatR;
 namespace ChronoTrack.Application.Clients.Queries.ListByWorkspace
 {
     public sealed class ListClientsByWorkspaceQueryHandler
-        : IRequestHandler<ListClientsByWorkspaceQuery, IReadOnlyCollection<ClientReadModel>>
+        : IRequestHandler<
+            ListClientsByWorkspaceQuery,
+            IReadOnlyCollection<ClientReadModel>>
     {
         private readonly IClientReadRepository _clientReadRepository;
 
-        public ListClientsByWorkspaceQueryHandler(IClientReadRepository clientReadRepository)
+        public ListClientsByWorkspaceQueryHandler(
+            IClientReadRepository clientReadRepository)
         {
             _clientReadRepository = clientReadRepository;
         }
@@ -18,7 +21,8 @@ namespace ChronoTrack.Application.Clients.Queries.ListByWorkspace
             ListClientsByWorkspaceQuery query,
             CancellationToken ct)
         {
-            return await _clientReadRepository.ListByWorkspaceAsync(query.WorkspaceId, ct);
+            return await _clientReadRepository
+                .ListByWorkspaceAsync(query.WorkspaceId, ct);
         }
     }
 }

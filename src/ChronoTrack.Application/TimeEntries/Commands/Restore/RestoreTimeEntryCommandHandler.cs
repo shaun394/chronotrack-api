@@ -23,7 +23,8 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Restore
             RestoreTimeEntryCommand command,
             CancellationToken ct)
         {
-            var timeEntry = await _timeEntryWriteRepository.GetForUpdateAsync(command.Id, ct);
+            var timeEntry = await _timeEntryWriteRepository
+                .GetForUpdateAsync(command.Id, ct);
 
             if (timeEntry is null)
             {

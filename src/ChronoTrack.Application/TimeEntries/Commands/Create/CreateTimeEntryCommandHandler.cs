@@ -40,14 +40,16 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Create
             CreateTimeEntryCommand command,
             CancellationToken ct)
         {
-            var workspace = await _workspaceReadRepository.GetByIdAsync(command.WorkspaceId, ct);
+            var workspace = await _workspaceReadRepository
+                .GetByIdAsync(command.WorkspaceId, ct);
 
             if (workspace is null)
             {
                 throw new NotFoundException("Workspace was not found.");
             }
 
-            var project = await _projectReadRepository.GetByIdAsync(command.ProjectId, ct);
+            var project = await _projectReadRepository
+                .GetByIdAsync(command.ProjectId, ct);
 
             if (project is null)
             {
@@ -61,7 +63,8 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Create
 
             if (command.ProjectTaskId.HasValue)
             {
-                var projectTask = await _projectTaskReadRepository.GetByIdAsync(command.ProjectTaskId.Value, ct);
+                var projectTask = await _projectTaskReadRepository
+                    .GetByIdAsync(command.ProjectTaskId.Value, ct);
 
                 if (projectTask is null)
                 {
@@ -76,7 +79,8 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Create
 
             if (command.ClientId.HasValue)
             {
-                var client = await _clientReadRepository.GetByIdAsync(command.ClientId.Value, ct);
+                var client = await _clientReadRepository
+                    .GetByIdAsync(command.ClientId.Value, ct);
 
                 if (client is null)
                 {

@@ -13,11 +13,15 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries
             _db = db;
         }
 
-        public async Task<TimeEntryReadModel?> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<TimeEntryReadModel?> GetByIdAsync(
+            int id,
+            CancellationToken ct)
         {
             return await _db.TimeEntries
                 .AsNoTracking()
-                .Where(x => x.Id == id && x.RemovedAt == null)
+                .Where(x =>
+                    x.Id == id
+                    && x.RemovedAt == null)
                 .Select(x => new TimeEntryReadModel
                 {
                     Id = x.Id,
@@ -30,11 +34,7 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries
                     StartTime = x.StartTime,
                     EndTime = x.EndTime,
                     DurationMinutes = x.DurationMinutes,
-                    IsBillable = x.IsBillable,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    IsBillable = x.IsBillable
                 })
                 .FirstOrDefaultAsync(ct);
         }
@@ -45,7 +45,9 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries
         {
             return await _db.TimeEntries
                 .AsNoTracking()
-                .Where(x => x.WorkspaceId == workspaceId && x.RemovedAt == null)
+                .Where(x =>
+                    x.WorkspaceId == workspaceId
+                    && x.RemovedAt == null)
                 .OrderByDescending(x => x.WorkDate)
                 .ThenByDescending(x => x.StartTime)
                 .Select(x => new TimeEntryReadModel
@@ -60,11 +62,7 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries
                     StartTime = x.StartTime,
                     EndTime = x.EndTime,
                     DurationMinutes = x.DurationMinutes,
-                    IsBillable = x.IsBillable,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    IsBillable = x.IsBillable
                 })
                 .ToListAsync(ct);
         }
@@ -75,7 +73,9 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries
         {
             return await _db.TimeEntries
                 .AsNoTracking()
-                .Where(x => x.ProjectId == projectId && x.RemovedAt == null)
+                .Where(x =>
+                    x.ProjectId == projectId
+                    && x.RemovedAt == null)
                 .OrderByDescending(x => x.WorkDate)
                 .ThenByDescending(x => x.StartTime)
                 .Select(x => new TimeEntryReadModel
@@ -90,11 +90,7 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries
                     StartTime = x.StartTime,
                     EndTime = x.EndTime,
                     DurationMinutes = x.DurationMinutes,
-                    IsBillable = x.IsBillable,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    IsBillable = x.IsBillable
                 })
                 .ToListAsync(ct);
         }

@@ -4,8 +4,11 @@ namespace ChronoTrack.Application.Interfaces.Repositories.Workspaces
 {
     public interface IWorkspaceReadRepository
     {
-        Task<WorkspaceReadModel?> GetByIdAsync(int id, CancellationToken ct);
+        Task<WorkspaceReadModel?> GetByIdAsync(
+            int id,
+            CancellationToken ct);
 
-        Task<IReadOnlyCollection<WorkspaceReadModel>> ListAsync(CancellationToken ct);
+        Task<IReadOnlyCollection<WorkspaceReadModel>> ListAsync(
+            CancellationToken ct);
     }
 }

@@ -6,11 +6,14 @@ using MediatR;
 namespace ChronoTrack.Application.TimeEntries.Queries.GetById
 {
     public sealed class GetTimeEntryByIdQueryHandler
-        : IRequestHandler<GetTimeEntryByIdQuery, TimeEntryReadModel>
+        : IRequestHandler<
+            GetTimeEntryByIdQuery,
+            TimeEntryReadModel>
     {
         private readonly ITimeEntryReadRepository _timeEntryReadRepository;
 
-        public GetTimeEntryByIdQueryHandler(ITimeEntryReadRepository timeEntryReadRepository)
+        public GetTimeEntryByIdQueryHandler(
+            ITimeEntryReadRepository timeEntryReadRepository)
         {
             _timeEntryReadRepository = timeEntryReadRepository;
         }
@@ -19,7 +22,8 @@ namespace ChronoTrack.Application.TimeEntries.Queries.GetById
             GetTimeEntryByIdQuery query,
             CancellationToken ct)
         {
-            var timeEntry = await _timeEntryReadRepository.GetByIdAsync(query.Id, ct);
+            var timeEntry = await _timeEntryReadRepository
+                .GetByIdAsync(query.Id, ct);
 
             if (timeEntry is null)
             {
