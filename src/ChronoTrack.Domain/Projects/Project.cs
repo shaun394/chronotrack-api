@@ -8,14 +8,16 @@ namespace ChronoTrack.Domain.Projects
         private const int MaxNameLength = 100;
         private const int MaxDescriptionLength = 500;
 
-        public Project() { }
+        private Project()
+        {
+        }
 
-        public Project(
+        private Project(
             int workspaceId,
             int? clientId,
             string name,
             string? description,
-            bool idBillable,
+            bool isBillable,
             string actor,
             DateTimeOffset now)
         {
@@ -23,9 +25,11 @@ namespace ChronoTrack.Domain.Projects
             ClientId = clientId;
             Name = name;
             Description = description;
-            IsBillable = idBillable;
+            IsBillable = isBillable;
             CreatedBy = actor;
             CreatedAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public int WorkspaceId { get; private set; }
@@ -67,7 +71,9 @@ namespace ChronoTrack.Domain.Projects
             DateTimeOffset now)
         {
             if (IsRemoved)
+            {
                 throw new DomainValidationException("Removed projects cannot be updated.");
+            }
 
             ValidateClientId(clientId);
             ValidateName(name);
@@ -77,14 +83,16 @@ namespace ChronoTrack.Domain.Projects
             Name = name.Trim();
             Description = description?.Trim();
             IsBillable = isBillable;
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public void Remove(string actor, DateTimeOffset now)
         {
             if (IsRemoved)
+            {
                 throw new DomainValidationException("Project is already removed.");
+            }
 
             RemovedBy = actor;
             RemovedAt = now;
@@ -93,39 +101,53 @@ namespace ChronoTrack.Domain.Projects
         public void Restore(string actor, DateTimeOffset now)
         {
             if (!IsRemoved)
+            {
                 throw new DomainValidationException("Project is not removed.");
+            }
 
             RemovedBy = null;
             RemovedAt = null;
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            RestoredBy = actor;
+            RestoredAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         private static void ValidateWorkspaceId(int workspaceId)
         {
             if (workspaceId <= 0)
+            {
                 throw new DomainValidationException("Workspace id is required.");
+            }
         }
 
         private static void ValidateClientId(int? clientId)
         {
             if (clientId.HasValue && clientId.Value <= 0)
-                throw new DomainValidationException("Client id must be greater than than 0.");
+            {
+                throw new DomainValidationException("Client id must be greater than 0.");
+            }
         }
 
         private static void ValidateName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
+            {
                 throw new DomainValidationException("Project name is required.");
+            }
 
             if (name.Trim().Length > MaxNameLength)
+            {
                 throw new DomainValidationException($"Project name cannot exceed {MaxNameLength} characters.");
+            }
         }
 
         private static void ValidateDescription(string? description)
         {
             if (description?.Trim().Length > MaxDescriptionLength)
+            {
                 throw new DomainValidationException($"Project description cannot exceed {MaxDescriptionLength} characters.");
+            }
         }
     }
 }

@@ -6,28 +6,50 @@ namespace ChronoTrack.Domain.Workspaces
     public sealed class Workspace : AuditableEntity
     {
         private const int MaxNameLength = 100;
+        private const int MaxDescriptionLength = 500;
 
         private Workspace()
         {
         }
 
-        private Workspace(string name, string actor, DateTimeOffset now)
+        private Workspace(
+            string name,
+            string? description,
+            string actor,
+            DateTimeOffset now)
         {
             Name = name;
+            Description = description;
             CreatedBy = actor;
             CreatedAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public string Name { get; private set; } = string.Empty;
+        public string? Description { get; private set; }
 
-        public static Workspace Create(string name, string actor, DateTimeOffset now)
+        public static Workspace Create(
+            string name,
+            string? description,
+            string actor,
+            DateTimeOffset now)
         {
             ValidateName(name);
+            ValidateDescription(description);
 
-            return new Workspace(name.Trim(), actor, now);
+            return new Workspace(
+                name.Trim(),
+                description?.Trim(),
+                actor,
+                now);
         }
 
-        public void Update(string name, string actor, DateTimeOffset now)
+        public void Update(
+            string name,
+            string? description,
+            string actor,
+            DateTimeOffset now)
         {
             if (IsRemoved)
             {
@@ -35,10 +57,12 @@ namespace ChronoTrack.Domain.Workspaces
             }
 
             ValidateName(name);
+            ValidateDescription(description);
 
             Name = name.Trim();
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            Description = description?.Trim();
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public void Remove(string actor, DateTimeOffset now)
@@ -61,8 +85,10 @@ namespace ChronoTrack.Domain.Workspaces
 
             RemovedBy = null;
             RemovedAt = null;
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            RestoredBy = actor;
+            RestoredAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         private static void ValidateName(string name)
@@ -75,6 +101,14 @@ namespace ChronoTrack.Domain.Workspaces
             if (name.Trim().Length > MaxNameLength)
             {
                 throw new DomainValidationException($"Workspace name cannot exceed {MaxNameLength} characters.");
+            }
+        }
+
+        private static void ValidateDescription(string? description)
+        {
+            if (description?.Trim().Length > MaxDescriptionLength)
+            {
+                throw new DomainValidationException($"Workspace description cannot exceed {MaxDescriptionLength} characters.");
             }
         }
     }

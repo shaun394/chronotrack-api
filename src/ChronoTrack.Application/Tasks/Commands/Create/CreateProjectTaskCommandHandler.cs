@@ -28,7 +28,8 @@ namespace ChronoTrack.Application.Tasks.Commands.Create
             CreateProjectTaskCommand command,
             CancellationToken ct)
         {
-            var project = await _projectReadRepository.GetByIdAsync(command.ProjectId, ct);
+            var project = await _projectReadRepository
+                .GetByIdAsync(command.ProjectId, ct);
 
             if (project is null)
             {

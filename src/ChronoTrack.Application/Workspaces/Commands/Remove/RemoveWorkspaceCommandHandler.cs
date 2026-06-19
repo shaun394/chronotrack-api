@@ -5,7 +5,8 @@ using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Commands.Remove
 {
-    public sealed class RemoveWorkspaceCommandHandler : IRequestHandler<RemoveWorkspaceCommand, int>
+    public sealed class RemoveWorkspaceCommandHandler
+        : IRequestHandler<RemoveWorkspaceCommand, int>
     {
         private readonly IWorkspaceWriteRepository _workspaceWriteRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,9 +19,12 @@ namespace ChronoTrack.Application.Workspaces.Commands.Remove
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(RemoveWorkspaceCommand request, CancellationToken ct)
+        public async Task<int> Handle(
+            RemoveWorkspaceCommand request,
+            CancellationToken ct)
         {
-            var workspace = await _workspaceWriteRepository.GetForUpdateAsync(request.Id, ct);
+            var workspace = await _workspaceWriteRepository
+                .GetForUpdateAsync(request.Id, ct);
 
             if (workspace is null)
             {

@@ -23,7 +23,8 @@ namespace ChronoTrack.Application.Tags.Commands.Update
             UpdateTagCommand command,
             CancellationToken ct)
         {
-            var tag = await _tagWriteRepository.GetForUpdateAsync(command.Id, ct);
+            var tag = await _tagWriteRepository
+                .GetForUpdateAsync(command.Id, ct);
 
             if (tag is null)
             {

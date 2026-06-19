@@ -5,11 +5,14 @@ using MediatR;
 namespace ChronoTrack.Application.TimeEntries.Queries.ListByWorkspace
 {
     public sealed class ListTimeEntriesByWorkspaceQueryHandler
-        : IRequestHandler<ListTimeEntriesByWorkspaceQuery, IReadOnlyCollection<TimeEntryReadModel>>
+        : IRequestHandler<
+            ListTimeEntriesByWorkspaceQuery,
+            IReadOnlyCollection<TimeEntryReadModel>>
     {
         private readonly ITimeEntryReadRepository _timeEntryReadRepository;
 
-        public ListTimeEntriesByWorkspaceQueryHandler(ITimeEntryReadRepository timeEntryReadRepository)
+        public ListTimeEntriesByWorkspaceQueryHandler(
+            ITimeEntryReadRepository timeEntryReadRepository)
         {
             _timeEntryReadRepository = timeEntryReadRepository;
         }
@@ -18,7 +21,8 @@ namespace ChronoTrack.Application.TimeEntries.Queries.ListByWorkspace
             ListTimeEntriesByWorkspaceQuery query,
             CancellationToken ct)
         {
-            return await _timeEntryReadRepository.ListByWorkspaceAsync(query.WorkspaceId, ct);
+            return await _timeEntryReadRepository
+                .ListByWorkspaceAsync(query.WorkspaceId, ct);
         }
     }
 }

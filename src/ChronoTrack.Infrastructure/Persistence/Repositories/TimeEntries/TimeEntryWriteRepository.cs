@@ -12,14 +12,18 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries
             _db = db;
         }
 
-        public async Task AddAsync(TimeEntry timeEntry, CancellationToken ct)
+        public async Task AddAsync(
+            TimeEntry timeEntry,
+            CancellationToken ct)
         {
             await _db.TimeEntries.AddAsync(timeEntry, ct);
         }
 
-        public async Task<TimeEntry?> GetForUpdateAsync(int id, CancellationToken ct)
+        public async Task<TimeEntry?> GetForUpdateAsync(
+            int id,
+            CancellationToken ct)
         {
-            return await _db.TimeEntries.FindAsync([id], ct);
+            return await _db.TimeEntries.FindAsync(id, ct);
         }
     }
 }

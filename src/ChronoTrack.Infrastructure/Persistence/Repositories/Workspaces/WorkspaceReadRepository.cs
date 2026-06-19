@@ -13,24 +13,26 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces
             _db = db;
         }
 
-        public async Task<WorkspaceReadModel?> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<WorkspaceReadModel?> GetByIdAsync(
+            int id,
+            CancellationToken ct)
         {
             return await _db.Workspaces
                 .AsNoTracking()
-                .Where(x => x.Id == id && x.RemovedAt == null)
+                .Where(x =>
+                    x.Id == id
+                    && x.RemovedAt == null)
                 .Select(x => new WorkspaceReadModel
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    Description = x.Description
                 })
                 .FirstOrDefaultAsync(ct);
         }
 
-        public async Task<IReadOnlyCollection<WorkspaceReadModel>> ListAsync(CancellationToken ct)
+        public async Task<IReadOnlyCollection<WorkspaceReadModel>> ListAsync(
+            CancellationToken ct)
         {
             return await _db.Workspaces
                 .AsNoTracking()
@@ -40,10 +42,7 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    Description = x.Description
                 })
                 .ToListAsync(ct);
         }

@@ -6,11 +6,14 @@ using MediatR;
 namespace ChronoTrack.Application.Clients.Queries.GetById
 {
     public sealed class GetClientByIdQueryHandler
-        : IRequestHandler<GetClientByIdQuery, ClientReadModel>
+        : IRequestHandler<
+            GetClientByIdQuery,
+            ClientReadModel>
     {
         private readonly IClientReadRepository _clientReadRepository;
 
-        public GetClientByIdQueryHandler(IClientReadRepository clientReadRepository)
+        public GetClientByIdQueryHandler(
+            IClientReadRepository clientReadRepository)
         {
             _clientReadRepository = clientReadRepository;
         }
@@ -19,7 +22,8 @@ namespace ChronoTrack.Application.Clients.Queries.GetById
             GetClientByIdQuery query,
             CancellationToken ct)
         {
-            var client = await _clientReadRepository.GetByIdAsync(query.Id, ct);
+            var client = await _clientReadRepository
+                .GetByIdAsync(query.Id, ct);
 
             if (client is null)
             {

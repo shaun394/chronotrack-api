@@ -3,6 +3,6 @@ using MediatR;
 
 namespace ChronoTrack.Application.TimeEntries.Queries.ListByProject
 {
-    public sealed record ListTimeEntriesByProjectQuery(int ProjectId)
-        : IRequest<IReadOnlyCollection<TimeEntryReadModel>>;
+    public sealed record ListTimeEntriesByProjectQuery(
+        int ProjectId) : IRequest<IReadOnlyCollection<TimeEntryReadModel>>;
 }

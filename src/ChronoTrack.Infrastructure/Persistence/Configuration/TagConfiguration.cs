@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace ChronoTrack.Infrastructure.Persistence.Configuration
 {
     public sealed class TagConfiguration
-        : IEntityTypeConfiguration<Tag>
+        : AuditableEntityConfiguration<Tag>
     {
-        public void Configure(EntityTypeBuilder<Tag> builder)
+        public override void Configure(EntityTypeBuilder<Tag> builder)
         {
+            base.Configure(builder);
+
             builder.ToTable("tags");
 
             builder.HasKey(x => x.Id);
@@ -25,33 +27,6 @@ namespace ChronoTrack.Infrastructure.Persistence.Configuration
                 .HasColumnName("name")
                 .HasMaxLength(50)
                 .IsRequired();
-
-            builder.Property(x => x.CreatedAt)
-                .HasColumnName("created_at")
-                .IsRequired();
-
-            builder.Property(x => x.CreatedBy)
-                .HasColumnName("created_by")
-                .HasMaxLength(100)
-                .IsRequired();
-
-            builder.Property(x => x.UpdatedAt)
-                .HasColumnName("updated_at")
-                .IsRequired(false);
-
-            builder.Property(x => x.UpdatedBy)
-                .HasColumnName("updated_by")
-                .HasMaxLength(100)
-                .IsRequired(false);
-
-            builder.Property(x => x.RemovedAt)
-                .HasColumnName("removed_at")
-                .IsRequired(false);
-
-            builder.Property(x => x.RemovedBy)
-                .HasColumnName("removed_by")
-                .HasMaxLength(100)
-                .IsRequired(false);
 
             builder.HasIndex(x => x.WorkspaceId)
                 .HasDatabaseName("ix_tags_workspace_id");

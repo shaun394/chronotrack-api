@@ -10,7 +10,8 @@ namespace ChronoTrack.Application.Tags.Queries.GetById
     {
         private readonly ITagReadRepository _tagReadRepository;
 
-        public GetTagByIdQueryHandler(ITagReadRepository tagReadRepository)
+        public GetTagByIdQueryHandler(
+            ITagReadRepository tagReadRepository)
         {
             _tagReadRepository = tagReadRepository;
         }
@@ -19,7 +20,8 @@ namespace ChronoTrack.Application.Tags.Queries.GetById
             GetTagByIdQuery query,
             CancellationToken ct)
         {
-            var tag = await _tagReadRepository.GetByIdAsync(query.Id, ct);
+            var tag = await _tagReadRepository
+                .GetByIdAsync(query.Id, ct);
 
             if (tag is null)
             {

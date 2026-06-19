@@ -5,7 +5,8 @@ using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Commands.Create
 {
-    public sealed class CreateWorkspaceCommandHandler : IRequestHandler<CreateWorkspaceCommand, int>
+    public sealed class CreateWorkspaceCommandHandler
+        : IRequestHandler<CreateWorkspaceCommand, int>
     {
         private readonly IWorkspaceWriteRepository _workspaceWriteRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -18,11 +19,14 @@ namespace ChronoTrack.Application.Workspaces.Commands.Create
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<int> Handle(CreateWorkspaceCommand request, CancellationToken ct)
+        public async Task<int> Handle(
+            CreateWorkspaceCommand command,
+            CancellationToken ct)
         {
             var workspace = Workspace.Create(
-                request.Name,
-                request.Actor,
+                command.Name,
+                command.Description,
+                command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _workspaceWriteRepository.AddAsync(workspace, ct);

@@ -32,14 +32,16 @@ namespace ChronoTrack.Application.Projects.Commands.Create
             CreateProjectCommand command,
             CancellationToken ct)
         {
-            var workspace = await _workspaceReadRepository.GetByIdAsync(command.WorkspaceId, ct);
+            var workspace = await _workspaceReadRepository
+                .GetByIdAsync(command.WorkspaceId, ct);
 
             if (workspace is null)
                 throw new NotFoundException("Workspace was not found.");
 
             if (command.ClientId.HasValue)
             {
-                var client = await _clientReadRepository.GetByIdAsync(command.ClientId.Value, ct);
+                var client = await _clientReadRepository
+                    .GetByIdAsync(command.ClientId.Value, ct);
 
                 if (client is null)
                     throw new NotFoundException("Client was not found.");

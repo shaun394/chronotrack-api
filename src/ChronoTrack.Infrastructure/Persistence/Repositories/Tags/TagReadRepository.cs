@@ -13,20 +13,20 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Tags
             _db = db;
         }
 
-        public async Task<TagReadModel?> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<TagReadModel?> GetByIdAsync(
+            int id,
+            CancellationToken ct)
         {
             return await _db.Tags
                 .AsNoTracking()
-                .Where(x => x.Id == id && x.RemovedAt == null)
+                .Where(x =>
+                    x.Id == id
+                    && x.RemovedAt == null)
                 .Select(x => new TagReadModel
                 {
                     Id = x.Id,
                     WorkspaceId = x.WorkspaceId,
-                    Name = x.Name,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    Name = x.Name
                 })
                 .FirstOrDefaultAsync(ct);
         }
@@ -37,17 +37,15 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Tags
         {
             return await _db.Tags
                 .AsNoTracking()
-                .Where(x => x.WorkspaceId == workspaceId && x.RemovedAt == null)
+                .Where(x =>
+                    x.WorkspaceId == workspaceId
+                    && x.RemovedAt == null)
                 .OrderBy(x => x.Name)
                 .Select(x => new TagReadModel
                 {
                     Id = x.Id,
                     WorkspaceId = x.WorkspaceId,
-                    Name = x.Name,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    Name = x.Name
                 })
                 .ToListAsync(ct);
         }

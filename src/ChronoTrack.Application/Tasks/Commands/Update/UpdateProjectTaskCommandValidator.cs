@@ -12,6 +12,7 @@ namespace ChronoTrack.Application.Tasks.Commands.Update
                 .WithMessage("Project task ID is required.");
 
             RuleFor(x => x.Name)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage("Name is required.")
                 .MaximumLength(100)

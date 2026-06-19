@@ -2,7 +2,8 @@
 
 namespace ChronoTrack.Application.Workspaces.Commands.Restore
 {
-    public sealed class RestoreWorkspaceCommandValidator : AbstractValidator<RestoreWorkspaceCommand>
+    public sealed class RestoreWorkspaceCommandValidator
+        : AbstractValidator<RestoreWorkspaceCommand>
     {
         public RestoreWorkspaceCommandValidator()
         {

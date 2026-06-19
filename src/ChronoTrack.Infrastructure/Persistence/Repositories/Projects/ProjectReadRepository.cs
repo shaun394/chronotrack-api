@@ -13,11 +13,15 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Projects
             _db = db;
         }
 
-        public async Task<ProjectReadModel?> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<ProjectReadModel?> GetByIdAsync(
+            int id,
+            CancellationToken ct)
         {
             return await _db.Projects
                 .AsNoTracking()
-                .Where(x => x.Id == id && x.RemovedAt == null)
+                .Where(x =>
+                    x.Id == id
+                    && x.RemovedAt == null)
                 .Select(x => new ProjectReadModel
                 {
                     Id = x.Id,
@@ -25,11 +29,7 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Projects
                     ClientId = x.ClientId,
                     Name = x.Name,
                     Description = x.Description,
-                    IsBillable = x.IsBillable,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    IsBillable = x.IsBillable
                 })
                 .FirstOrDefaultAsync(ct);
         }
@@ -40,7 +40,9 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Projects
         {
             return await _db.Projects
                 .AsNoTracking()
-                .Where(x => x.WorkspaceId == workspaceId && x.RemovedAt == null)
+                .Where(x =>
+                    x.WorkspaceId == workspaceId
+                    && x.RemovedAt == null)
                 .OrderBy(x => x.Name)
                 .Select(x => new ProjectReadModel
                 {
@@ -49,11 +51,7 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Projects
                     ClientId = x.ClientId,
                     Name = x.Name,
                     Description = x.Description,
-                    IsBillable = x.IsBillable,
-                    CreatedAt = x.CreatedAt,
-                    CreatedBy = x.CreatedBy,
-                    UpdatedAt = x.UpdatedAt,
-                    UpdatedBy = x.UpdatedBy
+                    IsBillable = x.IsBillable
                 })
                 .ToListAsync(ct);
         }

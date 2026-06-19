@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace ChronoTrack.Infrastructure.Persistence.Configuration
 {
     public sealed class TimeEntryConfiguration
-        : IEntityTypeConfiguration<TimeEntry>
+        : AuditableEntityConfiguration<TimeEntry>
     {
-        public void Configure(EntityTypeBuilder<TimeEntry> builder)
+        public override void Configure(EntityTypeBuilder<TimeEntry> builder)
         {
+            base.Configure(builder);
+
             builder.ToTable("time_entries");
 
             builder.HasKey(x => x.Id);
@@ -57,33 +59,6 @@ namespace ChronoTrack.Infrastructure.Persistence.Configuration
             builder.Property(x => x.IsBillable)
                 .HasColumnName("is_billable")
                 .IsRequired();
-
-            builder.Property(x => x.CreatedAt)
-                .HasColumnName("created_at")
-                .IsRequired();
-
-            builder.Property(x => x.CreatedBy)
-                .HasColumnName("created_by")
-                .HasMaxLength(100)
-                .IsRequired();
-
-            builder.Property(x => x.UpdatedAt)
-                .HasColumnName("updated_at")
-                .IsRequired(false);
-
-            builder.Property(x => x.UpdatedBy)
-                .HasColumnName("updated_by")
-                .HasMaxLength(100)
-                .IsRequired(false);
-
-            builder.Property(x => x.RemovedAt)
-                .HasColumnName("removed_at")
-                .IsRequired(false);
-
-            builder.Property(x => x.RemovedBy)
-                .HasColumnName("removed_by")
-                .HasMaxLength(100)
-                .IsRequired(false);
 
             builder.HasIndex(x => x.WorkspaceId)
                 .HasDatabaseName("ix_time_entries_workspace_id");

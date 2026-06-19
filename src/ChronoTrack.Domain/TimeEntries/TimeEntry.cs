@@ -36,6 +36,8 @@ namespace ChronoTrack.Domain.TimeEntries
             IsBillable = isBillable;
             CreatedBy = actor;
             CreatedAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public int WorkspaceId { get; private set; }
@@ -115,8 +117,8 @@ namespace ChronoTrack.Domain.TimeEntries
             EndTime = endTime;
             DurationMinutes = CalculateDurationMinutes(startTime, endTime);
             IsBillable = isBillable;
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public void Remove(string actor, DateTimeOffset now)
@@ -139,8 +141,10 @@ namespace ChronoTrack.Domain.TimeEntries
 
             RemovedBy = null;
             RemovedAt = null;
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            RestoredBy = actor;
+            RestoredAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         private static void ValidateWorkspaceId(int workspaceId)

@@ -26,6 +26,8 @@ namespace ChronoTrack.Domain.Tasks
             IsBillable = isBillable;
             CreatedBy = actor;
             CreatedAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public int ProjectId { get; private set; }
@@ -72,8 +74,8 @@ namespace ChronoTrack.Domain.Tasks
             Name = name.Trim();
             Description = description?.Trim();
             IsBillable = isBillable;
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         public void Remove(string actor, DateTimeOffset now)
@@ -96,8 +98,10 @@ namespace ChronoTrack.Domain.Tasks
 
             RemovedBy = null;
             RemovedAt = null;
-            UpdatedBy = actor;
-            UpdatedAt = now;
+            RestoredBy = actor;
+            RestoredAt = now;
+            ModifiedBy = actor;
+            ModifiedAt = now;
         }
 
         private static void ValidateProjectId(int projectId)

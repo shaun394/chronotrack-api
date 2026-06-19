@@ -35,14 +35,16 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
             UpdateTimeEntryCommand command,
             CancellationToken ct)
         {
-            var timeEntry = await _timeEntryWriteRepository.GetForUpdateAsync(command.Id, ct);
+            var timeEntry = await _timeEntryWriteRepository
+                .GetForUpdateAsync(command.Id, ct);
 
             if (timeEntry is null)
             {
                 throw new NotFoundException("Time entry was not found.");
             }
 
-            var project = await _projectReadRepository.GetByIdAsync(command.ProjectId, ct);
+            var project = await _projectReadRepository
+                .GetByIdAsync(command.ProjectId, ct);
 
             if (project is null)
             {
@@ -56,7 +58,8 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
 
             if (command.ProjectTaskId.HasValue)
             {
-                var projectTask = await _projectTaskReadRepository.GetByIdAsync(command.ProjectTaskId.Value, ct);
+                var projectTask = await _projectTaskReadRepository
+                    .GetByIdAsync(command.ProjectTaskId.Value, ct);
 
                 if (projectTask is null)
                 {
@@ -71,7 +74,8 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
 
             if (command.ClientId.HasValue)
             {
-                var client = await _clientReadRepository.GetByIdAsync(command.ClientId.Value, ct);
+                var client = await _clientReadRepository
+                    .GetByIdAsync(command.ClientId.Value, ct);
 
                 if (client is null)
                 {

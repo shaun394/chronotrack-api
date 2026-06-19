@@ -5,18 +5,25 @@ using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Queries.GetById
 {
-    public sealed class GetWorkspaceByIdQueryHandler : IRequestHandler<GetWorkspaceByIdQuery, WorkspaceReadModel>
+    public sealed class GetWorkspaceByIdQueryHandler
+        : IRequestHandler<
+            GetWorkspaceByIdQuery,
+            WorkspaceReadModel>
     {
         private readonly IWorkspaceReadRepository _workspaceReadRepository;
 
-        public GetWorkspaceByIdQueryHandler(IWorkspaceReadRepository workspaceReadRepository)
+        public GetWorkspaceByIdQueryHandler(
+            IWorkspaceReadRepository workspaceReadRepository)
         {
             _workspaceReadRepository = workspaceReadRepository;
         }
 
-        public async Task<WorkspaceReadModel> Handle(GetWorkspaceByIdQuery request, CancellationToken ct)
+        public async Task<WorkspaceReadModel> Handle(
+            GetWorkspaceByIdQuery request,
+            CancellationToken ct)
         {
-            var workspace = await _workspaceReadRepository.GetByIdAsync(request.Id, ct);
+            var workspace = await _workspaceReadRepository
+                .GetByIdAsync(request.Id, ct);
 
             if (workspace is null)
             {

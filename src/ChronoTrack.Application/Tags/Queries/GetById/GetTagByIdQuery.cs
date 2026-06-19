@@ -3,5 +3,6 @@ using MediatR;
 
 namespace ChronoTrack.Application.Tags.Queries.GetById
 {
-    public sealed record GetTagByIdQuery(int Id) : IRequest<TagReadModel>;
+    public sealed record GetTagByIdQuery(
+        int Id) : IRequest<TagReadModel>;
 }

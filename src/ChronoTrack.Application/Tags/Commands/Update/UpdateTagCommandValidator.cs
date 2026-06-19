@@ -12,6 +12,7 @@ namespace ChronoTrack.Application.Tags.Commands.Update
                 .WithMessage("Tag ID is required.");
 
             RuleFor(x => x.Name)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage("Name is required.")
                 .MaximumLength(50)

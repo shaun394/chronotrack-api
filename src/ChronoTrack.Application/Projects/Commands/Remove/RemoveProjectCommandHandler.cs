@@ -23,7 +23,8 @@ namespace ChronoTrack.Application.Projects.Commands.Remove
             RemoveProjectCommand command,
             CancellationToken ct)
         {
-            var project = await _projectWriteRepository.GetForUpdateAsync(command.Id, ct);
+            var project = await _projectWriteRepository
+                .GetForUpdateAsync(command.Id, ct);
 
             if (project is null)
             {
