@@ -38,6 +38,7 @@ namespace ChronoTrack.Api.Middleware
                 ValidationException => HttpStatusCode.BadRequest,
                 DomainValidationException => HttpStatusCode.BadRequest,
                 NotFoundException => HttpStatusCode.NotFound,
+                DuplicateEntityException => HttpStatusCode.Conflict,
                 _ => HttpStatusCode.InternalServerError
             };
 

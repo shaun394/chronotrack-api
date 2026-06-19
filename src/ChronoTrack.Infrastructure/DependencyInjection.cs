@@ -4,6 +4,7 @@ using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Application.Interfaces.Repositories.Tags;
 using ChronoTrack.Application.Interfaces.Repositories.Tasks;
 using ChronoTrack.Application.Interfaces.Repositories.TimeEntries;
+using ChronoTrack.Application.Interfaces.Repositories.TimeEntryTags;
 using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
 using ChronoTrack.Infrastructure.Persistence;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Clients;
@@ -11,6 +12,7 @@ using ChronoTrack.Infrastructure.Persistence.Repositories.Projects;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Tags;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Tasks;
 using ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries;
+using ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntryTags;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +47,8 @@ namespace ChronoTrack.Infrastructure
             services.AddScoped<IProjectTaskReadRepository, ProjectTaskReadRepository>();
             services.AddScoped<ITimeEntryWriteRepository, TimeEntryWriteRepository>();
             services.AddScoped<ITimeEntryReadRepository, TimeEntryReadRepository>();
+            services.AddScoped<ITimeEntryTagWriteRepository, TimeEntryTagWriteRepository>();
+            services.AddScoped<ITimeEntryTagReadRepository, TimeEntryTagReadRepository>();
 
             return services;
         }
