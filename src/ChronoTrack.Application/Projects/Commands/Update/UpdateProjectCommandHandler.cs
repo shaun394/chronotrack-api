@@ -2,6 +2,8 @@
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
+using ChronoTrack.Domain.Clients;
+using ChronoTrack.Domain.Projects;
 using MediatR;
 
 namespace ChronoTrack.Application.Projects.Commands.Update
@@ -31,7 +33,12 @@ namespace ChronoTrack.Application.Projects.Commands.Update
                 .GetForUpdateAsync(command.Id, ct);
 
             if (project is null)
-                throw new NotFoundException("Project was not found.");
+            {
+                throw new NotFoundException(
+                    nameof(Project),
+                    command.Id,
+                    nameof(UpdateProjectCommandHandler));
+            }
 
             if (command.ClientId.HasValue)
             {
@@ -39,10 +46,12 @@ namespace ChronoTrack.Application.Projects.Commands.Update
                     .GetByIdAsync(command.ClientId.Value, ct);
 
                 if (client is null)
-                    throw new NotFoundException("Client was not found.");
-
-                if (client.WorkspaceId != project.WorkspaceId)
-                    throw new NotFoundException("Client was not found in the selected workspace.");
+                {
+                    throw new NotFoundException(
+                        nameof(Client),
+                        command.ClientId.Value,
+                        nameof(UpdateProjectCommandHandler));
+                }
             }
 
             project.Update(

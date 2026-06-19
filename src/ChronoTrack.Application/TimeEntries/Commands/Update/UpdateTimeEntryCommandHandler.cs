@@ -4,6 +4,10 @@ using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Application.Interfaces.Repositories.Tasks;
 using ChronoTrack.Application.Interfaces.Repositories.TimeEntries;
+using ChronoTrack.Domain.Clients;
+using ChronoTrack.Domain.Projects;
+using ChronoTrack.Domain.Tasks;
+using ChronoTrack.Domain.TimeEntries;
 using MediatR;
 
 namespace ChronoTrack.Application.TimeEntries.Commands.Update
@@ -40,7 +44,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
 
             if (timeEntry is null)
             {
-                throw new NotFoundException("Time entry was not found.");
+                throw new NotFoundException(
+                    nameof(TimeEntry),
+                    command.Id,
+                    nameof(UpdateTimeEntryCommandHandler));
             }
 
             var project = await _projectReadRepository
@@ -48,12 +55,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
 
             if (project is null)
             {
-                throw new NotFoundException("Project was not found.");
-            }
-
-            if (project.WorkspaceId != timeEntry.WorkspaceId)
-            {
-                throw new NotFoundException("Project was not found in the selected workspace.");
+                throw new NotFoundException(
+                    nameof(Project),
+                    command.ProjectId,
+                    nameof(UpdateTimeEntryCommandHandler));
             }
 
             if (command.ProjectTaskId.HasValue)
@@ -63,12 +68,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
 
                 if (projectTask is null)
                 {
-                    throw new NotFoundException("Project task was not found.");
-                }
-
-                if (projectTask.ProjectId != command.ProjectId)
-                {
-                    throw new NotFoundException("Project task was not found in the selected project.");
+                    throw new NotFoundException(
+                        nameof(ProjectTask),
+                        command.ProjectTaskId.Value,
+                        nameof(UpdateTimeEntryCommandHandler));
                 }
             }
 
@@ -79,12 +82,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
 
                 if (client is null)
                 {
-                    throw new NotFoundException("Client was not found.");
-                }
-
-                if (client.WorkspaceId != timeEntry.WorkspaceId)
-                {
-                    throw new NotFoundException("Client was not found in the selected workspace.");
+                    throw new NotFoundException(
+                        nameof(Client),
+                        command.ClientId.Value,
+                        nameof(UpdateTimeEntryCommandHandler));
                 }
             }
 

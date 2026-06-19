@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
+using ChronoTrack.Domain.Workspaces;
 using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Commands.Update
@@ -28,7 +29,10 @@ namespace ChronoTrack.Application.Workspaces.Commands.Update
 
             if (workspace is null)
             {
-                throw new NotFoundException("Workspace was not found.");
+                throw new NotFoundException(
+                    nameof(Workspace),
+                    command.Id,
+                    nameof(UpdateWorkspaceCommandHandler));
             }
 
             workspace.Update(

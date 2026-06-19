@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
+using ChronoTrack.Domain.Workspaces;
 using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Commands.Remove
@@ -20,18 +21,21 @@ namespace ChronoTrack.Application.Workspaces.Commands.Remove
         }
 
         public async Task<int> Handle(
-            RemoveWorkspaceCommand request,
+            RemoveWorkspaceCommand command,
             CancellationToken ct)
         {
             var workspace = await _workspaceWriteRepository
-                .GetForUpdateAsync(request.Id, ct);
+                .GetForUpdateAsync(command.Id, ct);
 
             if (workspace is null)
             {
-                throw new NotFoundException("Workspace was not found.");
+                throw new NotFoundException(
+                    nameof(Workspace),
+                    command.Id,
+                    nameof(RemoveWorkspaceCommandHandler));
             }
 
-            workspace.Remove(request.Actor, DateTimeOffset.UtcNow);
+            workspace.Remove(command.Actor, DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 

@@ -1,5 +1,5 @@
 ﻿using ChronoTrack.Domain.Common;
-using ChronoTrack.Domain.Exceptions;
+using ChronoTrack.Domain.Common.Exceptions;
 
 namespace ChronoTrack.Domain.Tags
 {
@@ -51,7 +51,9 @@ namespace ChronoTrack.Domain.Tags
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Removed tags cannot be updated.");
+                throw new DomainValidationException(
+                    nameof(Tag),
+                    "Removed tags cannot be updated.");
             }
 
             ValidateName(name);
@@ -65,7 +67,9 @@ namespace ChronoTrack.Domain.Tags
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Tag is already removed.");
+                throw new DomainValidationException(
+                    nameof(Tag),
+                    "Tag is already removed.");
             }
 
             RemovedBy = actor;
@@ -76,7 +80,9 @@ namespace ChronoTrack.Domain.Tags
         {
             if (!IsRemoved)
             {
-                throw new DomainValidationException("Tag is not removed.");
+                throw new DomainValidationException(
+                    nameof(Tag),
+                    "Tag is not removed.");
             }
 
             RemovedBy = null;
@@ -91,7 +97,9 @@ namespace ChronoTrack.Domain.Tags
         {
             if (workspaceId <= 0)
             {
-                throw new DomainValidationException("Workspace id is required.");
+                throw new DomainValidationException(
+                    nameof(Tag),
+                    "Workspace id is required.");
             }
         }
 
@@ -99,12 +107,16 @@ namespace ChronoTrack.Domain.Tags
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new DomainValidationException("Tag name is required.");
+                throw new DomainValidationException(
+                    nameof(Tag),
+                    "Tag name is required.");
             }
 
             if (name.Trim().Length > MaxNameLength)
             {
-                throw new DomainValidationException($"Tag name cannot exceed {MaxNameLength} characters.");
+                throw new DomainValidationException(
+                    nameof(Tag),
+                    $"Tag name cannot exceed {MaxNameLength} characters.");
             }
         }
     }

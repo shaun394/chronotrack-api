@@ -1,5 +1,5 @@
 ﻿using ChronoTrack.Domain.Common;
-using ChronoTrack.Domain.Exceptions;
+using ChronoTrack.Domain.Common.Exceptions;
 
 namespace ChronoTrack.Domain.Projects
 {
@@ -72,7 +72,9 @@ namespace ChronoTrack.Domain.Projects
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Removed projects cannot be updated.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    "Removed projects cannot be updated.");
             }
 
             ValidateClientId(clientId);
@@ -91,7 +93,9 @@ namespace ChronoTrack.Domain.Projects
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Project is already removed.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    "Project is already removed.");
             }
 
             RemovedBy = actor;
@@ -102,7 +106,9 @@ namespace ChronoTrack.Domain.Projects
         {
             if (!IsRemoved)
             {
-                throw new DomainValidationException("Project is not removed.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    "Project is not removed.");
             }
 
             RemovedBy = null;
@@ -117,7 +123,9 @@ namespace ChronoTrack.Domain.Projects
         {
             if (workspaceId <= 0)
             {
-                throw new DomainValidationException("Workspace id is required.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    "Workspace id is required.");
             }
         }
 
@@ -125,7 +133,9 @@ namespace ChronoTrack.Domain.Projects
         {
             if (clientId.HasValue && clientId.Value <= 0)
             {
-                throw new DomainValidationException("Client id must be greater than 0.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    "Client id must be greater than 0.");
             }
         }
 
@@ -133,12 +143,16 @@ namespace ChronoTrack.Domain.Projects
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new DomainValidationException("Project name is required.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    "Project name is required.");
             }
 
             if (name.Trim().Length > MaxNameLength)
             {
-                throw new DomainValidationException($"Project name cannot exceed {MaxNameLength} characters.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    $"Project name cannot exceed {MaxNameLength} characters.");
             }
         }
 
@@ -146,7 +160,9 @@ namespace ChronoTrack.Domain.Projects
         {
             if (description?.Trim().Length > MaxDescriptionLength)
             {
-                throw new DomainValidationException($"Project description cannot exceed {MaxDescriptionLength} characters.");
+                throw new DomainValidationException(
+                    nameof(Project),
+                    $"Project description cannot exceed {MaxDescriptionLength} characters.");
             }
         }
     }

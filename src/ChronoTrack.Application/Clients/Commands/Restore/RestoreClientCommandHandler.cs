@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
+using ChronoTrack.Domain.Clients;
 using MediatR;
 
 namespace ChronoTrack.Application.Clients.Commands.Restore
@@ -23,11 +24,15 @@ namespace ChronoTrack.Application.Clients.Commands.Restore
             RestoreClientCommand command,
             CancellationToken ct)
         {
-            var client = await _clientWriteRepository.GetForUpdateAsync(command.Id, ct);
+            var client = await _clientWriteRepository
+                .GetForUpdateAsync(command.Id, ct);
 
             if (client is null)
             {
-                throw new NotFoundException("Client was not found.");
+                throw new NotFoundException(
+                    nameof(Client),
+                    command.Id,
+                    nameof(RestoreClientCommandHandler));
             }
 
             client.Restore(

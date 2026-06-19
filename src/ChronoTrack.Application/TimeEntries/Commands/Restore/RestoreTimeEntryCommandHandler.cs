@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.TimeEntries;
+using ChronoTrack.Domain.TimeEntries;
 using MediatR;
 
 namespace ChronoTrack.Application.TimeEntries.Commands.Restore
@@ -28,7 +29,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Restore
 
             if (timeEntry is null)
             {
-                throw new NotFoundException("Time entry was not found.");
+                throw new NotFoundException(
+                    nameof(TimeEntry),
+                    command.Id,
+                    nameof(RestoreTimeEntryCommandHandler));
             }
 
             timeEntry.Restore(

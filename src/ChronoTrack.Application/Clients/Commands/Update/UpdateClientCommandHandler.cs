@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
+using ChronoTrack.Domain.Clients;
 using MediatR;
 
 namespace ChronoTrack.Application.Clients.Commands.Update
@@ -28,7 +29,10 @@ namespace ChronoTrack.Application.Clients.Commands.Update
 
             if (client is null)
             {
-                throw new NotFoundException("Client was not found.");
+                throw new NotFoundException(
+                    nameof(Client),
+                    command.Id,
+                    nameof(UpdateClientCommandHandler));
             }
 
             client.Update(

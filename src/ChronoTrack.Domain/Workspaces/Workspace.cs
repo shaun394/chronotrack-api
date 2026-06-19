@@ -1,5 +1,5 @@
 ﻿using ChronoTrack.Domain.Common;
-using ChronoTrack.Domain.Exceptions;
+using ChronoTrack.Domain.Common.Exceptions;
 
 namespace ChronoTrack.Domain.Workspaces
 {
@@ -53,7 +53,9 @@ namespace ChronoTrack.Domain.Workspaces
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Removed workspaces cannot be updated.");
+                throw new DomainValidationException(
+                    nameof(Workspace),
+                    "Removed workspaces cannot be updated.");
             }
 
             ValidateName(name);
@@ -69,7 +71,9 @@ namespace ChronoTrack.Domain.Workspaces
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Workspace is already removed.");
+                throw new DomainValidationException(
+                    nameof(Workspace),
+                    "Workspace is already removed.");
             }
 
             RemovedBy = actor;
@@ -80,7 +84,9 @@ namespace ChronoTrack.Domain.Workspaces
         {
             if (!IsRemoved)
             {
-                throw new DomainValidationException("Workspace is not removed.");
+                throw new DomainValidationException(
+                    nameof(Workspace),
+                    "Workspace is not removed.");
             }
 
             RemovedBy = null;
@@ -95,12 +101,16 @@ namespace ChronoTrack.Domain.Workspaces
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new DomainValidationException("Workspace name is required.");
+                throw new DomainValidationException(
+                    nameof(Workspace),
+                    "Workspace name is required.");
             }
 
             if (name.Trim().Length > MaxNameLength)
             {
-                throw new DomainValidationException($"Workspace name cannot exceed {MaxNameLength} characters.");
+                throw new DomainValidationException(
+                    nameof(Workspace),
+                    $"Workspace name cannot exceed {MaxNameLength} characters.");
             }
         }
 
@@ -108,7 +118,9 @@ namespace ChronoTrack.Domain.Workspaces
         {
             if (description?.Trim().Length > MaxDescriptionLength)
             {
-                throw new DomainValidationException($"Workspace description cannot exceed {MaxDescriptionLength} characters.");
+                throw new DomainValidationException(
+                    nameof(Workspace),
+                    $"Workspace description cannot exceed {MaxDescriptionLength} characters.");
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using ChronoTrack.Api.Responses;
 using ChronoTrack.Application.Common.Exceptions;
-using ChronoTrack.Domain.Exceptions;
+using ChronoTrack.Domain.Common.Exceptions;
 using FluentValidation;
 using System.Net;
 

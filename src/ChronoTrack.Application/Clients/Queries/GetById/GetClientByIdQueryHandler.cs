@@ -1,14 +1,13 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.ReadModels.Clients;
+using ChronoTrack.Domain.Clients;
 using MediatR;
 
 namespace ChronoTrack.Application.Clients.Queries.GetById
 {
     public sealed class GetClientByIdQueryHandler
-        : IRequestHandler<
-            GetClientByIdQuery,
-            ClientReadModel>
+        : IRequestHandler<GetClientByIdQuery, ClientReadModel>
     {
         private readonly IClientReadRepository _clientReadRepository;
 
@@ -27,7 +26,10 @@ namespace ChronoTrack.Application.Clients.Queries.GetById
 
             if (client is null)
             {
-                throw new NotFoundException("Client was not found.");
+                throw new NotFoundException(
+                    nameof(Client),
+                    query.Id,
+                    nameof(GetClientByIdQueryHandler));
             }
 
             return client;

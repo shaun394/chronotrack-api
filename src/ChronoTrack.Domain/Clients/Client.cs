@@ -1,5 +1,5 @@
 ﻿using ChronoTrack.Domain.Common;
-using ChronoTrack.Domain.Exceptions;
+using ChronoTrack.Domain.Common.Exceptions;
 
 namespace ChronoTrack.Domain.Clients
 {
@@ -51,7 +51,9 @@ namespace ChronoTrack.Domain.Clients
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Removed clients cannot be updated.");
+                throw new DomainValidationException(
+                    nameof(Client),
+                    "Removed clients cannot be updated.");
             }
 
             ValidateName(name);
@@ -65,7 +67,9 @@ namespace ChronoTrack.Domain.Clients
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Client is already removed.");
+                throw new DomainValidationException(
+                    nameof(Client),
+                    "Client is already removed.");
             }
 
             RemovedBy = actor;
@@ -76,7 +80,9 @@ namespace ChronoTrack.Domain.Clients
         {
             if (!IsRemoved)
             {
-                throw new DomainValidationException("Client is not removed.");
+                throw new DomainValidationException(
+                    nameof(Client),
+                    "Client is not removed.");
             }
 
             RemovedBy = null;
@@ -91,7 +97,9 @@ namespace ChronoTrack.Domain.Clients
         {
             if (workspaceId <= 0)
             {
-                throw new DomainValidationException("Workspace id is required.");
+                throw new DomainValidationException(
+                    nameof(Client),
+                    "Workspace id is required.");
             }
         }
 
@@ -99,12 +107,16 @@ namespace ChronoTrack.Domain.Clients
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new DomainValidationException("Client name is required.");
+                throw new DomainValidationException(
+                    nameof(Client),
+                    "Client name is required.");
             }
 
             if (name.Trim().Length > MaxNameLength)
             {
-                throw new DomainValidationException($"Client name cannot exceed {MaxNameLength} characters.");
+                throw new DomainValidationException(
+                    nameof(Client),
+                    $"Client name cannot exceed {MaxNameLength} characters.");
             }
         }
     }

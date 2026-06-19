@@ -1,5 +1,5 @@
 ﻿using ChronoTrack.Domain.Common;
-using ChronoTrack.Domain.Exceptions;
+using ChronoTrack.Domain.Common.Exceptions;
 
 namespace ChronoTrack.Domain.Tasks
 {
@@ -65,7 +65,9 @@ namespace ChronoTrack.Domain.Tasks
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Removed project tasks cannot be updated.");
+                throw new DomainValidationException(
+                    nameof(ProjectTask),
+                    "Removed project tasks cannot be updated.");
             }
 
             ValidateName(name);
@@ -82,7 +84,9 @@ namespace ChronoTrack.Domain.Tasks
         {
             if (IsRemoved)
             {
-                throw new DomainValidationException("Project task is already removed.");
+                throw new DomainValidationException(
+                    nameof(ProjectTask),
+                    "Project task is already removed.");
             }
 
             RemovedBy = actor;
@@ -93,7 +97,9 @@ namespace ChronoTrack.Domain.Tasks
         {
             if (!IsRemoved)
             {
-                throw new DomainValidationException("Project task is not removed.");
+                throw new DomainValidationException(
+                    nameof(ProjectTask),
+                    "Project task is not removed.");
             }
 
             RemovedBy = null;
@@ -108,7 +114,9 @@ namespace ChronoTrack.Domain.Tasks
         {
             if (projectId <= 0)
             {
-                throw new DomainValidationException("Project id is required.");
+                throw new DomainValidationException(
+                    nameof(ProjectTask),
+                    "Project id is required.");
             }
         }
 
@@ -116,12 +124,16 @@ namespace ChronoTrack.Domain.Tasks
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new DomainValidationException("Project task name is required.");
+                throw new DomainValidationException(
+                    nameof(ProjectTask),
+                    "Project task name is required.");
             }
 
             if (name.Trim().Length > MaxNameLength)
             {
-                throw new DomainValidationException($"Project task name cannot exceed {MaxNameLength} characters.");
+                throw new DomainValidationException(
+                    nameof(ProjectTask),
+                    $"Project task name cannot exceed {MaxNameLength} characters.");
             }
         }
 
@@ -129,7 +141,9 @@ namespace ChronoTrack.Domain.Tasks
         {
             if (description?.Trim().Length > MaxDescriptionLength)
             {
-                throw new DomainValidationException($"Project task description cannot exceed {MaxDescriptionLength} characters.");
+                throw new DomainValidationException(
+                    nameof(ProjectTask),
+                    $"Project task description cannot exceed {MaxDescriptionLength} characters.");
             }
         }
     }
