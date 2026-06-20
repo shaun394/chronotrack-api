@@ -2,27 +2,51 @@
 {
     public sealed class ApiResponse<T>
     {
-        private ApiResponse(bool success, T? data, string? error)
+        private ApiResponse(
+            bool success,
+            string? message,
+            T? data,
+            IReadOnlyCollection<ApiError> errors)
         {
             Success = success;
+            Message = message;
             Data = data;
-            Error = error;
+            Errors = errors;
         }
 
         public bool Success { get; }
-
+        public string? Message { get; }
         public T? Data { get; }
-
-        public string? Error { get; }
+        public IReadOnlyCollection<ApiError> Errors { get; }
 
         public static ApiResponse<T> Ok(T data)
         {
-            return new ApiResponse<T>(true, data, null);
+            return new ApiResponse<T>(
+                true,
+                null,
+                data,
+                Array.Empty<ApiError>());
         }
 
-        public static ApiResponse<T> Fail(string error)
+        public static ApiResponse<T> Fail(
+            string message)
         {
-            return new ApiResponse<T>(false, default, error);
+            return new ApiResponse<T>(
+                false,
+                message,
+                default,
+                Array.Empty<ApiError>());
+        }
+
+        public static ApiResponse<T> Fail(
+            string message,
+            IReadOnlyCollection<ApiError> errors)
+        {
+            return new ApiResponse<T>(
+                false,
+                message,
+                default,
+                errors);
         }
     }
 }
