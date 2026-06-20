@@ -2,6 +2,8 @@
 {
     public static class WebApplicationExtensions
     {
+        private const string FrontendCorsPolicy = "Frontend";
+
         public static WebApplication UseApiPipeline(this WebApplication app)
         {
             app.UseMiddleware<Middleware.GlobalExceptionMiddleware>();
@@ -16,7 +18,12 @@
                 });
             }
 
-            app.UseHttpsRedirection();
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
+
+            app.UseCors(FrontendCorsPolicy);
 
             app.UseAuthorization();
 

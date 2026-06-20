@@ -31,7 +31,9 @@ namespace ChronoTrack.Api.Middleware
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+        private async Task HandleExceptionAsync(
+            HttpContext httpContext,
+            Exception ex)
         {
             HttpStatusCode statusCode = ex switch
             {
@@ -50,9 +52,27 @@ namespace ChronoTrack.Api.Middleware
             httpContext.Response.StatusCode = (int)statusCode;
             httpContext.Response.ContentType = "application/json";
 
-            var response = ApiResponse<object>.Fail(ex.Message);
+            var response = ex is ValidationException validationException
+                ? BuildValidationResponse(validationException)
+                : ApiResponse<object>.Fail(ex.Message);
 
             await httpContext.Response.WriteAsJsonAsync(response);
+        }
+
+        private static ApiResponse<object> BuildValidationResponse(
+            ValidationException validationException)
+        {
+            var errors = validationException.Errors
+                .Select(error => new ApiError
+                {
+                    Field = error.PropertyName,
+                    Message = error.ErrorMessage
+                })
+                .ToList();
+
+            return ApiResponse<object>.Fail(
+                "Validation failed.",
+                errors);
         }
     }
 }
