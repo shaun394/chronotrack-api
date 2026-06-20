@@ -4,58 +4,44 @@
     {
         private PagedApiResponse(
             bool success,
+            string? message,
             IReadOnlyCollection<T> data,
-            int page,
+            int pageNumber,
             int pageSize,
             int totalCount,
-            string? error)
+            IReadOnlyCollection<ApiError> errors)
         {
             Success = success;
+            Message = message;
             Data = data;
-            Page = page;
+            PageNumber = pageNumber;
             PageSize = pageSize;
             TotalCount = totalCount;
-            Error = error;
+            Errors = errors;
         }
 
         public bool Success { get; }
-
+        public string? Message { get; }
         public IReadOnlyCollection<T> Data { get; }
-
-        public int Page { get; }
-
+        public int PageNumber { get; }
         public int PageSize { get; }
-
         public int TotalCount { get; }
-
-        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
-
-        public string? Error { get; }
+        public IReadOnlyCollection<ApiError> Errors { get; }
 
         public static PagedApiResponse<T> Ok(
             IReadOnlyCollection<T> data,
-            int page,
+            int pageNumber,
             int pageSize,
             int totalCount)
         {
             return new PagedApiResponse<T>(
                 true,
+                null,
                 data,
-                page,
+                pageNumber,
                 pageSize,
                 totalCount,
-                null);
-        }
-
-        public static PagedApiResponse<T> Fail(string error)
-        {
-            return new PagedApiResponse<T>(
-                false,
-                Array.Empty<T>(),
-                1,
-                0,
-                0,
-                error);
+                Array.Empty<ApiError>());
         }
     }
 }
