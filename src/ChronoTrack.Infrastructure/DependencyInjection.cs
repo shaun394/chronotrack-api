@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
+using ChronoTrack.Application.Interfaces.Repositories.Reports;
 using ChronoTrack.Application.Interfaces.Repositories.Tags;
 using ChronoTrack.Application.Interfaces.Repositories.Tasks;
 using ChronoTrack.Application.Interfaces.Repositories.TimeEntries;
@@ -9,6 +10,7 @@ using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
 using ChronoTrack.Infrastructure.Persistence;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Clients;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Projects;
+using ChronoTrack.Infrastructure.Persistence.Repositories.Reports;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Tags;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Tasks;
 using ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries;
@@ -49,6 +51,7 @@ namespace ChronoTrack.Infrastructure
             services.AddScoped<ITimeEntryReadRepository, TimeEntryReadRepository>();
             services.AddScoped<ITimeEntryTagWriteRepository, TimeEntryTagWriteRepository>();
             services.AddScoped<ITimeEntryTagReadRepository, TimeEntryTagReadRepository>();
+            services.AddScoped<IReportReadRepository, ReportReadRepository>();
 
             return services;
         }
