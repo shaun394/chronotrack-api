@@ -29,7 +29,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPost]
         [EndpointSummary("Create workspace")]
         [EndpointDescription("Creates a new workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status201Created)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status201Created)]
         public async Task<ActionResult<ApiResponse<int>>> Create(
             CreateWorkspaceRequest request,
             CancellationToken ct)
@@ -50,7 +52,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet]
         [EndpointSummary("List workspaces")]
         [EndpointDescription("Returns all active workspaces.")]
-        [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<WorkspaceReadModel>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<WorkspaceReadModel>>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyCollection<WorkspaceReadModel>>>> List(
             CancellationToken ct)
         {
@@ -64,7 +68,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("{id:int}")]
         [EndpointSummary("Get workspace by id")]
         [EndpointDescription("Returns a single active workspace by id.")]
-        [ProducesResponseType(typeof(ApiResponse<WorkspaceReadModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<WorkspaceReadModel>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<WorkspaceReadModel>>> GetById(
             int id,
             CancellationToken ct)
@@ -79,7 +85,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPut("{id:int}")]
         [EndpointSummary("Update workspace")]
         [EndpointDescription("Updates an existing workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Update(
             int id,
             UpdateWorkspaceRequest request,
@@ -99,7 +107,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/remove")]
         [EndpointSummary("Remove workspace")]
         [EndpointDescription("Soft deletes an existing workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Remove(
             int id,
             CancellationToken ct)
@@ -114,7 +124,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/restore")]
         [EndpointSummary("Restore workspace")]
         [EndpointDescription("Restores a previously removed workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Restore(
             int id,
             CancellationToken ct)

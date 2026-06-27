@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Restore
     public sealed class RestoreTimeEntryCommandHandler
         : IRequestHandler<RestoreTimeEntryCommand, int>
     {
-        private readonly ITimeEntryWriteRepository _timeEntryWriteRepository;
+        private readonly ITimeEntryWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RestoreTimeEntryCommandHandler(
-            ITimeEntryWriteRepository timeEntryWriteRepository,
+            ITimeEntryWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _timeEntryWriteRepository = timeEntryWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Restore
             RestoreTimeEntryCommand command,
             CancellationToken ct)
         {
-            var timeEntry = await _timeEntryWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (timeEntry is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(TimeEntry),
@@ -35,13 +35,13 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Restore
                     nameof(RestoreTimeEntryCommandHandler));
             }
 
-            timeEntry.Restore(
+            result.Restore(
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return timeEntry.Id;
+            return result.Id;
         }
     }
 }

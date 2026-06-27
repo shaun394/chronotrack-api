@@ -94,7 +94,7 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Create
                 }
             }
 
-            var timeEntry = TimeEntry.Create(
+            var result = TimeEntry.Create(
                 command.WorkspaceId,
                 command.ProjectId,
                 command.ProjectTaskId,
@@ -107,10 +107,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Create
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
-            await _timeEntryWriteRepository.AddAsync(timeEntry, ct);
+            await _timeEntryWriteRepository.AddAsync(result, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return timeEntry.Id;
+            return result.Id;
         }
     }
 }

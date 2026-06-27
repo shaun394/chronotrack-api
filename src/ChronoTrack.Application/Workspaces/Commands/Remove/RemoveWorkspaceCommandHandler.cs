@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Workspaces.Commands.Remove
     public sealed class RemoveWorkspaceCommandHandler
         : IRequestHandler<RemoveWorkspaceCommand, int>
     {
-        private readonly IWorkspaceWriteRepository _workspaceWriteRepository;
+        private readonly IWorkspaceWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RemoveWorkspaceCommandHandler(
-            IWorkspaceWriteRepository workspaceWriteRepository,
+            IWorkspaceWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _workspaceWriteRepository = workspaceWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Workspaces.Commands.Remove
             RemoveWorkspaceCommand command,
             CancellationToken ct)
         {
-            var workspace = await _workspaceWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (workspace is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Workspace),
@@ -35,11 +35,11 @@ namespace ChronoTrack.Application.Workspaces.Commands.Remove
                     nameof(RemoveWorkspaceCommandHandler));
             }
 
-            workspace.Remove(command.Actor, DateTimeOffset.UtcNow);
+            result.Remove(command.Actor, DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return workspace.Id;
+            return result.Id;
         }
     }
 }

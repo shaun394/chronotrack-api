@@ -9,20 +9,22 @@ namespace ChronoTrack.Application.Clients.Queries.ListByWorkspace
             ListClientsByWorkspaceQuery,
             IReadOnlyCollection<ClientReadModel>>
     {
-        private readonly IClientReadRepository _clientReadRepository;
+        private readonly IClientReadRepository _repository;
 
         public ListClientsByWorkspaceQueryHandler(
-            IClientReadRepository clientReadRepository)
+            IClientReadRepository repository)
         {
-            _clientReadRepository = clientReadRepository;
+            _repository = repository;
         }
 
         public async Task<IReadOnlyCollection<ClientReadModel>> Handle(
             ListClientsByWorkspaceQuery query,
             CancellationToken ct)
         {
-            return await _clientReadRepository
+            var result = await _repository
                 .ListByWorkspaceAsync(query.WorkspaceId, ct);
+
+            return result;
         }
     }
 }

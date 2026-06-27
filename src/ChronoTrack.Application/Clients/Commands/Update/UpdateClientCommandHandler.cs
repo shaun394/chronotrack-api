@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Clients.Commands.Update
     public sealed class UpdateClientCommandHandler
         : IRequestHandler<UpdateClientCommand, int>
     {
-        private readonly IClientWriteRepository _clientWriteRepository;
+        private readonly IClientWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateClientCommandHandler(
-            IClientWriteRepository clientWriteRepository,
+            IClientWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _clientWriteRepository = clientWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Clients.Commands.Update
             UpdateClientCommand command,
             CancellationToken ct)
         {
-            var client = await _clientWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (client is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Client),
@@ -35,14 +35,14 @@ namespace ChronoTrack.Application.Clients.Commands.Update
                     nameof(UpdateClientCommandHandler));
             }
 
-            client.Update(
+            result.Update(
                 command.Name,
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return client.Id;
+            return result.Id;
         }
     }
 }

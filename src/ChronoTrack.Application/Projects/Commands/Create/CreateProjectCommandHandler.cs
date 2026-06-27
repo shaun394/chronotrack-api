@@ -59,7 +59,7 @@ namespace ChronoTrack.Application.Projects.Commands.Create
                 }
             }
 
-            var project = Project.Create(
+            var result = Project.Create(
                 command.WorkspaceId,
                 command.ClientId,
                 command.Name,
@@ -68,10 +68,10 @@ namespace ChronoTrack.Application.Projects.Commands.Create
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
-            await _projectWriteRepository.AddAsync(project, ct);
+            await _projectWriteRepository.AddAsync(result, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return project.Id;
+            return result.Id;
         }
     }
 }

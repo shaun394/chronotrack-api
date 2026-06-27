@@ -40,7 +40,7 @@ namespace ChronoTrack.Application.Tasks.Commands.Create
                     nameof(CreateProjectTaskCommandHandler));
             }
 
-            var projectTask = ProjectTask.Create(
+            var result = ProjectTask.Create(
                 command.ProjectId,
                 command.Name,
                 command.Description,
@@ -48,10 +48,10 @@ namespace ChronoTrack.Application.Tasks.Commands.Create
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
-            await _projectTaskWriteRepository.AddAsync(projectTask, ct);
+            await _projectTaskWriteRepository.AddAsync(result, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return projectTask.Id;
+            return result.Id;
         }
     }
 }

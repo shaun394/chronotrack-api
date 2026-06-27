@@ -29,7 +29,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPost]
         [EndpointSummary("Create client")]
         [EndpointDescription("Creates a new client inside a workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status201Created)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status201Created)]
         public async Task<ActionResult<ApiResponse<int>>> Create(
             CreateClientRequest request,
             CancellationToken ct)
@@ -50,7 +52,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("{id:int}")]
         [EndpointSummary("Get client by id")]
         [EndpointDescription("Returns a single active client by id.")]
-        [ProducesResponseType(typeof(ApiResponse<ClientReadModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<ClientReadModel>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<ClientReadModel>>> GetById(
             int id,
             CancellationToken ct)
@@ -65,7 +69,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("workspace/{workspaceId:int}")]
         [EndpointSummary("List clients by workspace")]
         [EndpointDescription("Returns all active clients for a workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<ClientReadModel>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<ClientReadModel>>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyCollection<ClientReadModel>>>> ListByWorkspace(
             int workspaceId,
             CancellationToken ct)
@@ -80,7 +86,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPut("{id:int}")]
         [EndpointSummary("Update client")]
         [EndpointDescription("Updates the name of an existing client.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Update(
             int id,
             UpdateClientRequest request,
@@ -99,7 +107,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/remove")]
         [EndpointSummary("Remove client")]
         [EndpointDescription("Soft deletes an existing client.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Remove(
             int id,
             CancellationToken ct)
@@ -114,7 +124,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/restore")]
         [EndpointSummary("Restore client")]
         [EndpointDescription("Restores a previously removed client.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Restore(
             int id,
             CancellationToken ct)

@@ -9,20 +9,22 @@ namespace ChronoTrack.Application.Tags.Queries.ListByWorkspace
             ListTagsByWorkspaceQuery,
             IReadOnlyCollection<TagReadModel>>
     {
-        private readonly ITagReadRepository _tagReadRepository;
+        private readonly ITagReadRepository _repository;
 
         public ListTagsByWorkspaceQueryHandler(
-            ITagReadRepository tagReadRepository)
+            ITagReadRepository repository)
         {
-            _tagReadRepository = tagReadRepository;
+            _repository = repository;
         }
 
         public async Task<IReadOnlyCollection<TagReadModel>> Handle(
             ListTagsByWorkspaceQuery query,
             CancellationToken ct)
         {
-            return await _tagReadRepository
+            var result = await _repository
                 .ListByWorkspaceAsync(query.WorkspaceId, ct);
+
+            return result;
         }
     }
 }

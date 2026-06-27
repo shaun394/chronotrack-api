@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Clients.Commands.Remove
     public sealed class RemoveClientCommandHandler
         : IRequestHandler<RemoveClientCommand, int>
     {
-        private readonly IClientWriteRepository _clientWriteRepository;
+        private readonly IClientWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RemoveClientCommandHandler(
-            IClientWriteRepository clientWriteRepository,
+            IClientWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _clientWriteRepository = clientWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Clients.Commands.Remove
             RemoveClientCommand command,
             CancellationToken ct)
         {
-            var client = await _clientWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (client is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Client),
@@ -35,13 +35,13 @@ namespace ChronoTrack.Application.Clients.Commands.Remove
                     nameof(RemoveClientCommandHandler));
             }
 
-            client.Remove(
+            result.Remove(
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return client.Id;
+            return result.Id;
         }
     }
 }

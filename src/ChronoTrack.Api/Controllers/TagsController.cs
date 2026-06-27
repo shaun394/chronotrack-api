@@ -29,7 +29,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPost]
         [EndpointSummary("Create tag")]
         [EndpointDescription("Creates a new tag inside a workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status201Created)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status201Created)]
         public async Task<ActionResult<ApiResponse<int>>> Create(
             CreateTagRequest request,
             CancellationToken ct)
@@ -50,7 +52,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("{id:int}")]
         [EndpointSummary("Get tag by id")]
         [EndpointDescription("Returns a single active tag by id.")]
-        [ProducesResponseType(typeof(ApiResponse<TagReadModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<TagReadModel>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<TagReadModel>>> GetById(
             int id,
             CancellationToken ct)
@@ -65,7 +69,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("workspace/{workspaceId:int}")]
         [EndpointSummary("List tags by workspace")]
         [EndpointDescription("Returns all active tags for a workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<TagReadModel>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<TagReadModel>>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TagReadModel>>>> ListByWorkspace(
             int workspaceId,
             CancellationToken ct)
@@ -80,7 +86,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPut("{id:int}")]
         [EndpointSummary("Update tag")]
         [EndpointDescription("Updates an existing tag.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Update(
             int id,
             UpdateTagRequest request,
@@ -99,7 +107,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/remove")]
         [EndpointSummary("Remove tag")]
         [EndpointDescription("Soft deletes an existing tag.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Remove(
             int id,
             CancellationToken ct)
@@ -114,7 +124,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/restore")]
         [EndpointSummary("Restore tag")]
         [EndpointDescription("Restores a previously removed tag.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Restore(
             int id,
             CancellationToken ct)

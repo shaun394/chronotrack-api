@@ -39,10 +39,10 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
             UpdateTimeEntryCommand command,
             CancellationToken ct)
         {
-            var timeEntry = await _timeEntryWriteRepository
+            var result = await _timeEntryWriteRepository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (timeEntry is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(TimeEntry),
@@ -89,7 +89,7 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
                 }
             }
 
-            timeEntry.Update(
+            result.Update(
                 command.ProjectId,
                 command.ProjectTaskId,
                 command.ClientId,
@@ -103,7 +103,7 @@ namespace ChronoTrack.Application.TimeEntries.Commands.Update
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return timeEntry.Id;
+            return result.Id;
         }
     }
 }

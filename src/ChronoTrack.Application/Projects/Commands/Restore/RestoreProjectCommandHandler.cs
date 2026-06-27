@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Projects.Commands.Restore
     public sealed class RestoreProjectCommandHandler
         : IRequestHandler<RestoreProjectCommand, int>
     {
-        private readonly IProjectWriteRepository _projectWriteRepository;
+        private readonly IProjectWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RestoreProjectCommandHandler(
-            IProjectWriteRepository projectWriteRepository,
+            IProjectWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _projectWriteRepository = projectWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Projects.Commands.Restore
             RestoreProjectCommand command,
             CancellationToken ct)
         {
-            var project = await _projectWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (project is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Project),
@@ -35,13 +35,13 @@ namespace ChronoTrack.Application.Projects.Commands.Restore
                     nameof(RestoreProjectCommandHandler));
             }
 
-            project.Restore(
+            result.Restore(
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return project.Id;
+            return result.Id;
         }
     }
 }

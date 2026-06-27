@@ -9,22 +9,22 @@ namespace ChronoTrack.Application.Tags.Queries.GetById
     public sealed class GetTagByIdQueryHandler
         : IRequestHandler<GetTagByIdQuery, TagReadModel>
     {
-        private readonly ITagReadRepository _tagReadRepository;
+        private readonly ITagReadRepository _repository;
 
         public GetTagByIdQueryHandler(
-            ITagReadRepository tagReadRepository)
+            ITagReadRepository repository)
         {
-            _tagReadRepository = tagReadRepository;
+            _repository = repository;
         }
 
         public async Task<TagReadModel> Handle(
             GetTagByIdQuery query,
             CancellationToken ct)
         {
-            var tag = await _tagReadRepository
+            var result = await _repository
                 .GetByIdAsync(query.Id, ct);
 
-            if (tag is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Tag),
@@ -32,7 +32,7 @@ namespace ChronoTrack.Application.Tags.Queries.GetById
                     nameof(GetTagByIdQueryHandler));
             }
 
-            return tag;
+            return result;
         }
     }
 }

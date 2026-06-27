@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Tags.Commands.Update
     public sealed class UpdateTagCommandHandler
         : IRequestHandler<UpdateTagCommand, int>
     {
-        private readonly ITagWriteRepository _tagWriteRepository;
+        private readonly ITagWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateTagCommandHandler(
-            ITagWriteRepository tagWriteRepository,
+            ITagWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _tagWriteRepository = tagWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Tags.Commands.Update
             UpdateTagCommand command,
             CancellationToken ct)
         {
-            var tag = await _tagWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (tag is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Tag),
@@ -35,14 +35,14 @@ namespace ChronoTrack.Application.Tags.Commands.Update
                     nameof(UpdateTagCommandHandler));
             }
 
-            tag.Update(
+            result.Update(
                 command.Name,
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return tag.Id;
+            return result.Id;
         }
     }
 }

@@ -26,9 +26,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet]
         [EndpointSummary("List time entry tags")]
         [EndpointDescription("Returns all active tags assigned to a time entry.")]
-        [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<TimeEntryTagReadModel>>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<TimeEntryTagReadModel>>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TimeEntryTagReadModel>>>> ListByTimeEntryAsync(
             int timeEntryId,
             CancellationToken ct)
@@ -43,10 +43,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPost("{tagId:int}")]
         [EndpointSummary("Add tag to time entry")]
         [EndpointDescription("Assigns a tag to a time entry. If the tag was previously removed from the time entry, the existing link is restored.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> AddAsync(
             int timeEntryId,
             int tagId,
@@ -65,9 +64,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpDelete("{tagId:int}")]
         [EndpointSummary("Remove tag from time entry")]
         [EndpointDescription("Soft-removes a tag assignment from a time entry.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> RemoveAsync(
             int timeEntryId,
             int tagId,

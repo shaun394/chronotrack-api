@@ -9,22 +9,22 @@ namespace ChronoTrack.Application.Workspaces.Queries.GetById
     public sealed class GetWorkspaceByIdQueryHandler
         : IRequestHandler<GetWorkspaceByIdQuery, WorkspaceReadModel>
     {
-        private readonly IWorkspaceReadRepository _workspaceReadRepository;
+        private readonly IWorkspaceReadRepository _repository;
 
         public GetWorkspaceByIdQueryHandler(
-            IWorkspaceReadRepository workspaceReadRepository)
+            IWorkspaceReadRepository repository)
         {
-            _workspaceReadRepository = workspaceReadRepository;
+            _repository = repository;
         }
 
         public async Task<WorkspaceReadModel> Handle(
             GetWorkspaceByIdQuery query,
             CancellationToken ct)
         {
-            var workspace = await _workspaceReadRepository
+            var result = await _repository
                 .GetByIdAsync(query.Id, ct);
 
-            if (workspace is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Workspace),
@@ -32,7 +32,7 @@ namespace ChronoTrack.Application.Workspaces.Queries.GetById
                     nameof(GetWorkspaceByIdQueryHandler));
             }
 
-            return workspace;
+            return result;
         }
     }
 }

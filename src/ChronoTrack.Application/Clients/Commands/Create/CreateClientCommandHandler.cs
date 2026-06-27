@@ -40,16 +40,16 @@ namespace ChronoTrack.Application.Clients.Commands.Create
                     nameof(CreateClientCommandHandler));
             }
 
-            var client = Client.Create(
+            var result = Client.Create(
                 command.WorkspaceId,
                 command.Name,
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
-            await _clientWriteRepository.AddAsync(client, ct);
+            await _clientWriteRepository.AddAsync(result, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return client.Id;
+            return result.Id;
         }
     }
 }

@@ -40,16 +40,16 @@ namespace ChronoTrack.Application.Tags.Commands.Create
                     nameof(CreateTagCommandHandler));
             }
 
-            var tag = Tag.Create(
+            var result = Tag.Create(
                 command.WorkspaceId,
                 command.Name,
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
-            await _tagWriteRepository.AddAsync(tag, ct);
+            await _tagWriteRepository.AddAsync(result, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return tag.Id;
+            return result.Id;
         }
     }
 }

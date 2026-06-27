@@ -9,22 +9,22 @@ namespace ChronoTrack.Application.TimeEntries.Queries.GetById
     public sealed class GetTimeEntryByIdQueryHandler
         : IRequestHandler<GetTimeEntryByIdQuery, TimeEntryReadModel>
     {
-        private readonly ITimeEntryReadRepository _timeEntryReadRepository;
+        private readonly ITimeEntryReadRepository _repository;
 
         public GetTimeEntryByIdQueryHandler(
-            ITimeEntryReadRepository timeEntryReadRepository)
+            ITimeEntryReadRepository repository)
         {
-            _timeEntryReadRepository = timeEntryReadRepository;
+            _repository = repository;
         }
 
         public async Task<TimeEntryReadModel> Handle(
             GetTimeEntryByIdQuery query,
             CancellationToken ct)
         {
-            var timeEntry = await _timeEntryReadRepository
+            var result = await _repository
                 .GetByIdAsync(query.Id, ct);
 
-            if (timeEntry is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(TimeEntry),
@@ -32,7 +32,7 @@ namespace ChronoTrack.Application.TimeEntries.Queries.GetById
                     nameof(GetTimeEntryByIdQueryHandler));
             }
 
-            return timeEntry;
+            return result;
         }
     }
 }

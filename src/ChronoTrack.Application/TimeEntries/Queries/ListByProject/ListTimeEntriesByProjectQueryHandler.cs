@@ -9,20 +9,22 @@ namespace ChronoTrack.Application.TimeEntries.Queries.ListByProject
             ListTimeEntriesByProjectQuery,
             IReadOnlyCollection<TimeEntryReadModel>>
     {
-        private readonly ITimeEntryReadRepository _timeEntryReadRepository;
+        private readonly ITimeEntryReadRepository _repository;
 
         public ListTimeEntriesByProjectQueryHandler(
-            ITimeEntryReadRepository timeEntryReadRepository)
+            ITimeEntryReadRepository repository)
         {
-            _timeEntryReadRepository = timeEntryReadRepository;
+            _repository = repository;
         }
 
         public async Task<IReadOnlyCollection<TimeEntryReadModel>> Handle(
             ListTimeEntriesByProjectQuery query,
             CancellationToken ct)
         {
-            return await _timeEntryReadRepository
+            var result = await _repository
                 .ListByProjectAsync(query.ProjectId, ct);
+
+            return result;
         }
     }
 }

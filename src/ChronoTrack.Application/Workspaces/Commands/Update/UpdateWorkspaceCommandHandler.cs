@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Workspaces.Commands.Update
     public sealed class UpdateWorkspaceCommandHandler
         : IRequestHandler<UpdateWorkspaceCommand, int>
     {
-        private readonly IWorkspaceWriteRepository _workspaceWriteRepository;
+        private readonly IWorkspaceWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateWorkspaceCommandHandler(
-            IWorkspaceWriteRepository workspaceWriteRepository,
+            IWorkspaceWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _workspaceWriteRepository = workspaceWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Workspaces.Commands.Update
             UpdateWorkspaceCommand command,
             CancellationToken ct)
         {
-            var workspace = await _workspaceWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (workspace is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Workspace),
@@ -35,7 +35,7 @@ namespace ChronoTrack.Application.Workspaces.Commands.Update
                     nameof(UpdateWorkspaceCommandHandler));
             }
 
-            workspace.Update(
+            result.Update(
                 command.Name,
                 command.Description,
                 command.Actor,
@@ -43,7 +43,7 @@ namespace ChronoTrack.Application.Workspaces.Commands.Update
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return workspace.Id;
+            return result.Id;
         }
     }
 }

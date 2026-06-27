@@ -30,7 +30,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPost]
         [EndpointSummary("Create time entry")]
         [EndpointDescription("Creates a new time entry for a workspace and project.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status201Created)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status201Created)]
         public async Task<ActionResult<ApiResponse<int>>> Create(
             CreateTimeEntryRequest request,
             CancellationToken ct)
@@ -58,7 +60,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("{id:int}")]
         [EndpointSummary("Get time entry by id")]
         [EndpointDescription("Returns a single active time entry by id.")]
-        [ProducesResponseType(typeof(ApiResponse<TimeEntryReadModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<TimeEntryReadModel>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<TimeEntryReadModel>>> GetById(
             int id,
             CancellationToken ct)
@@ -73,7 +77,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("workspace/{workspaceId:int}")]
         [EndpointSummary("List time entries by workspace")]
         [EndpointDescription("Returns all active time entries for a workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>>> ListByWorkspace(
             int workspaceId,
             CancellationToken ct)
@@ -88,7 +94,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("project/{projectId:int}")]
         [EndpointSummary("List time entries by project")]
         [EndpointDescription("Returns all active time entries for a project.")]
-        [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>>> ListByProject(
             int projectId,
             CancellationToken ct)
@@ -103,7 +111,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPut("{id:int}")]
         [EndpointSummary("Update time entry")]
         [EndpointDescription("Updates an existing time entry.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Update(
             int id,
             UpdateTimeEntryRequest request,
@@ -129,7 +139,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/remove")]
         [EndpointSummary("Remove time entry")]
         [EndpointDescription("Soft deletes an existing time entry.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Remove(
             int id,
             CancellationToken ct)
@@ -144,7 +156,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/restore")]
         [EndpointSummary("Restore time entry")]
         [EndpointDescription("Restores a previously removed time entry.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Restore(
             int id,
             CancellationToken ct)

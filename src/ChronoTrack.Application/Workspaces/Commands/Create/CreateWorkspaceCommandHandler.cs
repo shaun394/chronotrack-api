@@ -8,14 +8,14 @@ namespace ChronoTrack.Application.Workspaces.Commands.Create
     public sealed class CreateWorkspaceCommandHandler
         : IRequestHandler<CreateWorkspaceCommand, int>
     {
-        private readonly IWorkspaceWriteRepository _workspaceWriteRepository;
+        private readonly IWorkspaceWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public CreateWorkspaceCommandHandler(
-            IWorkspaceWriteRepository workspaceWriteRepository,
+            IWorkspaceWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _workspaceWriteRepository = workspaceWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -23,16 +23,16 @@ namespace ChronoTrack.Application.Workspaces.Commands.Create
             CreateWorkspaceCommand command,
             CancellationToken ct)
         {
-            var workspace = Workspace.Create(
+            var result = Workspace.Create(
                 command.Name,
                 command.Description,
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
-            await _workspaceWriteRepository.AddAsync(workspace, ct);
+            await _repository.AddAsync(result, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return workspace.Id;
+            return result.Id;
         }
     }
 }
