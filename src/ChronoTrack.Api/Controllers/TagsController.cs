@@ -1,5 +1,5 @@
-﻿using ChronoTrack.Api.Requests.Tags;
-using ChronoTrack.Api.Responses;
+﻿using ChronoTrack.Api.Common.Responses;
+using ChronoTrack.Api.Requests.Tags;
 using ChronoTrack.Application.ReadModels.Tags;
 using ChronoTrack.Application.Tags.Commands.Create;
 using ChronoTrack.Application.Tags.Commands.Remove;
@@ -32,7 +32,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status201Created)]
-        public async Task<ActionResult<ApiResponse<int>>> Create(
+        public async Task<IActionResult> CreateAsync(
             CreateTagRequest request,
             CancellationToken ct)
         {
@@ -43,10 +43,11 @@ namespace ChronoTrack.Api.Controllers
                     Actor),
                 ct);
 
-            return CreatedAtAction(
-                nameof(GetById),
+            return ApiResponseFactory.Created(
+                nameof(GetByIdAsync),
+                ControllerContext.ActionDescriptor.ControllerName,
                 new { id },
-                ApiResponse<int>.Ok(id));
+                new { id });
         }
 
         [HttpGet("{id:int}")]
@@ -55,15 +56,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<TagReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<TagReadModel>>> GetById(
+        public async Task<IActionResult> GetByIdAsync(
             int id,
             CancellationToken ct)
         {
-            var tag = await _mediator.Send(
+            var response = await _mediator.Send(
                 new GetTagByIdQuery(id),
                 ct);
 
-            return Ok(ApiResponse<TagReadModel>.Ok(tag));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpGet("workspace/{workspaceId:int}")]
@@ -72,15 +73,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<TagReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TagReadModel>>>> ListByWorkspace(
+        public async Task<IActionResult> ListByWorkspaceAsync(
             int workspaceId,
             CancellationToken ct)
         {
-            var tags = await _mediator.Send(
+            var response = await _mediator.Send(
                 new ListTagsByWorkspaceQuery(workspaceId),
                 ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<TagReadModel>>.Ok(tags));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpPut("{id:int}")]
@@ -89,19 +90,19 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Update(
+        public async Task<IActionResult> UpdateAsync(
             int id,
             UpdateTagRequest request,
             CancellationToken ct)
         {
-            int tagId = await _mediator.Send(
+            await _mediator.Send(
                 new UpdateTagCommand(
                     id,
                     request.Name,
                     Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(tagId));
+            return ApiResponseFactory.NoContent();
         }
 
         [HttpPatch("{id:int}/remove")]
@@ -110,15 +111,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Remove(
+        public async Task<IActionResult> RemoveAsync(
             int id,
             CancellationToken ct)
         {
-            int tagId = await _mediator.Send(
+            await _mediator.Send(
                 new RemoveTagCommand(id, Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(tagId));
+            return ApiResponseFactory.NoContent();
         }
 
         [HttpPatch("{id:int}/restore")]
@@ -127,15 +128,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Restore(
+        public async Task<IActionResult> RestoreAsync(
             int id,
             CancellationToken ct)
         {
-            int tagId = await _mediator.Send(
+            await _mediator.Send(
                 new RestoreTagCommand(id, Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(tagId));
+            return ApiResponseFactory.NoContent();
         }
     }
 }

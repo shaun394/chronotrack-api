@@ -1,4 +1,4 @@
-﻿using ChronoTrack.Api.Responses;
+﻿using ChronoTrack.Api.Common.Responses;
 using ChronoTrack.Application.ReadModels.TimeEntryTags;
 using ChronoTrack.Application.TimeEntryTags.Commands.Add;
 using ChronoTrack.Application.TimeEntryTags.Commands.Remove;
@@ -29,15 +29,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<TimeEntryTagReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TimeEntryTagReadModel>>>> ListByTimeEntryAsync(
+        public async Task<IActionResult> ListByTimeEntryAsync(
             int timeEntryId,
             CancellationToken ct)
         {
             var query = new ListTimeEntryTagsByTimeEntryQuery(timeEntryId);
 
-            var result = await _mediator.Send(query, ct);
+            var response = await _mediator.Send(query, ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<TimeEntryTagReadModel>>.Ok(result));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpPost("{tagId:int}")]
@@ -46,7 +46,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> AddAsync(
+        public async Task<IActionResult> AddAsync(
             int timeEntryId,
             int tagId,
             CancellationToken ct)
@@ -56,9 +56,9 @@ namespace ChronoTrack.Api.Controllers
                 tagId,
                 Actor);
 
-            var result = await _mediator.Send(command, ct);
+            var response = await _mediator.Send(command, ct);
 
-            return Ok(ApiResponse<int>.Ok(result));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpDelete("{tagId:int}")]
@@ -67,7 +67,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> RemoveAsync(
+        public async Task<IActionResult> RemoveAsync(
             int timeEntryId,
             int tagId,
             CancellationToken ct)
@@ -77,9 +77,9 @@ namespace ChronoTrack.Api.Controllers
                 tagId,
                 Actor);
 
-            var result = await _mediator.Send(command, ct);
+            var response = await _mediator.Send(command, ct);
 
-            return Ok(ApiResponse<int>.Ok(result));
+            return ApiResponseFactory.Ok(response);
         }
     }
 }

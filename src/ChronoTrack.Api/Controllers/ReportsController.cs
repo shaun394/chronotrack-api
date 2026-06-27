@@ -1,4 +1,4 @@
-﻿using ChronoTrack.Api.Responses;
+﻿using ChronoTrack.Api.Common.Responses;
 using ChronoTrack.Application.ReadModels.Reports;
 using ChronoTrack.Application.Reports.Queries.GetWorkspaceSummary;
 using ChronoTrack.Application.Reports.Queries.ListDailySummary;
@@ -28,7 +28,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<WorkspaceTimeSummaryReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<WorkspaceTimeSummaryReadModel>>> GetWorkspaceSummaryAsync(
+        public async Task<IActionResult> GetWorkspaceSummaryAsync(
             int workspaceId,
             [FromQuery] DateOnly from,
             [FromQuery] DateOnly to,
@@ -39,9 +39,9 @@ namespace ChronoTrack.Api.Controllers
                 from,
                 to);
 
-            var result = await _mediator.Send(query, ct);
+            var response = await _mediator.Send(query, ct);
 
-            return Ok(ApiResponse<WorkspaceTimeSummaryReadModel>.Ok(result));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpGet("daily")]
@@ -50,7 +50,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<DailyTimeSummaryReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<DailyTimeSummaryReadModel>>>> ListDailySummaryAsync(
+        public async Task<IActionResult> ListDailySummaryAsync(
             int workspaceId,
             [FromQuery] DateOnly from,
             [FromQuery] DateOnly to,
@@ -61,9 +61,9 @@ namespace ChronoTrack.Api.Controllers
                 from,
                 to);
 
-            var result = await _mediator.Send(query, ct);
+            var response = await _mediator.Send(query, ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<DailyTimeSummaryReadModel>>.Ok(result));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpGet("project-summary")]
@@ -72,7 +72,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<ProjectTimeSummaryReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<ProjectTimeSummaryReadModel>>>> ListProjectSummaryAsync(
+        public async Task<IActionResult> ListProjectSummaryAsync(
             int workspaceId,
             [FromQuery] DateOnly from,
             [FromQuery] DateOnly to,
@@ -83,9 +83,9 @@ namespace ChronoTrack.Api.Controllers
                 from,
                 to);
 
-            var result = await _mediator.Send(query, ct);
+            var response = await _mediator.Send(query, ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<ProjectTimeSummaryReadModel>>.Ok(result));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpGet("tag-summary")]
@@ -94,7 +94,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<TagTimeSummaryReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TagTimeSummaryReadModel>>>> ListTagSummaryAsync(
+        public async Task<IActionResult> ListTagSummaryAsync(
             int workspaceId,
             [FromQuery] DateOnly from,
             [FromQuery] DateOnly to,
@@ -105,9 +105,9 @@ namespace ChronoTrack.Api.Controllers
                 from,
                 to);
 
-            var result = await _mediator.Send(query, ct);
+            var response = await _mediator.Send(query, ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<TagTimeSummaryReadModel>>.Ok(result));
+            return ApiResponseFactory.Ok(response);
         }
     }
 }

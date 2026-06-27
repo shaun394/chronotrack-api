@@ -1,5 +1,5 @@
-﻿using ChronoTrack.Api.Requests.TimeEntries;
-using ChronoTrack.Api.Responses;
+﻿using ChronoTrack.Api.Common.Responses;
+using ChronoTrack.Api.Requests.TimeEntries;
 using ChronoTrack.Application.ReadModels.TimeEntries;
 using ChronoTrack.Application.TimeEntries.Commands.Create;
 using ChronoTrack.Application.TimeEntries.Commands.Remove;
@@ -33,7 +33,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status201Created)]
-        public async Task<ActionResult<ApiResponse<int>>> Create(
+        public async Task<IActionResult> CreateAsync(
             CreateTimeEntryRequest request,
             CancellationToken ct)
         {
@@ -51,10 +51,11 @@ namespace ChronoTrack.Api.Controllers
                     Actor),
                 ct);
 
-            return CreatedAtAction(
-                nameof(GetById),
+            return ApiResponseFactory.Created(
+                nameof(GetByIdAsync),
+                ControllerContext.ActionDescriptor.ControllerName,
                 new { id },
-                ApiResponse<int>.Ok(id));
+                new { id });
         }
 
         [HttpGet("{id:int}")]
@@ -63,15 +64,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<TimeEntryReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<TimeEntryReadModel>>> GetById(
+        public async Task<IActionResult> GetByIdAsync(
             int id,
             CancellationToken ct)
         {
-            var timeEntry = await _mediator.Send(
+            var response = await _mediator.Send(
                 new GetTimeEntryByIdQuery(id),
                 ct);
 
-            return Ok(ApiResponse<TimeEntryReadModel>.Ok(timeEntry));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpGet("workspace/{workspaceId:int}")]
@@ -80,15 +81,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>>> ListByWorkspace(
+        public async Task<IActionResult> ListByWorkspaceAsync(
             int workspaceId,
             CancellationToken ct)
         {
-            var timeEntries = await _mediator.Send(
+            var response = await _mediator.Send(
                 new ListTimeEntriesByWorkspaceQuery(workspaceId),
                 ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>.Ok(timeEntries));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpGet("project/{projectId:int}")]
@@ -97,15 +98,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>>> ListByProject(
+        public async Task<IActionResult> ListByProjectAsync(
             int projectId,
             CancellationToken ct)
         {
-            var timeEntries = await _mediator.Send(
+            var response = await _mediator.Send(
                 new ListTimeEntriesByProjectQuery(projectId),
                 ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<TimeEntryReadModel>>.Ok(timeEntries));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpPut("{id:int}")]
@@ -114,12 +115,12 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Update(
+        public async Task<IActionResult> UpdateAsync(
             int id,
             UpdateTimeEntryRequest request,
             CancellationToken ct)
         {
-            int timeEntryId = await _mediator.Send(
+            await _mediator.Send(
                 new UpdateTimeEntryCommand(
                     id,
                     request.ProjectId,
@@ -133,7 +134,7 @@ namespace ChronoTrack.Api.Controllers
                     Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(timeEntryId));
+            return ApiResponseFactory.NoContent();
         }
 
         [HttpPatch("{id:int}/remove")]
@@ -142,15 +143,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Remove(
+        public async Task<IActionResult> RemoveAsync(
             int id,
             CancellationToken ct)
         {
-            int timeEntryId = await _mediator.Send(
+            await _mediator.Send(
                 new RemoveTimeEntryCommand(id, Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(timeEntryId));
+            return ApiResponseFactory.NoContent();
         }
 
         [HttpPatch("{id:int}/restore")]
@@ -159,7 +160,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Restore(
+        public async Task<IActionResult> RestoreAsync(
             int id,
             CancellationToken ct)
         {
@@ -167,7 +168,7 @@ namespace ChronoTrack.Api.Controllers
                 new RestoreTimeEntryCommand(id, Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(timeEntryId));
+            return ApiResponseFactory.NoContent();
         }
     }
 }
