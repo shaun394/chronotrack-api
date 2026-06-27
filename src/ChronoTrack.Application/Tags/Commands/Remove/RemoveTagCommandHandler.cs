@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Tags.Commands.Remove
     public sealed class RemoveTagCommandHandler
         : IRequestHandler<RemoveTagCommand, int>
     {
-        private readonly ITagWriteRepository _tagWriteRepository;
+        private readonly ITagWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RemoveTagCommandHandler(
-            ITagWriteRepository tagWriteRepository,
+            ITagWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _tagWriteRepository = tagWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Tags.Commands.Remove
             RemoveTagCommand command,
             CancellationToken ct)
         {
-            var tag = await _tagWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (tag is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Tag),
@@ -35,13 +35,13 @@ namespace ChronoTrack.Application.Tags.Commands.Remove
                     nameof(RemoveTagCommandHandler));
             }
 
-            tag.Remove(
+            result.Remove(
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return tag.Id;
+            return result.Id;
         }
     }
 }

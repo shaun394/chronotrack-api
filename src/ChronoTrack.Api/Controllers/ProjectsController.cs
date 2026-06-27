@@ -29,7 +29,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPost]
         [EndpointSummary("Create project")]
         [EndpointDescription("Creates a new project inside a workspace. A project can optionally be linked to a client.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status201Created)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status201Created)]
         public async Task<ActionResult<ApiResponse<int>>> Create(
             CreateProjectRequest request,
             CancellationToken ct)
@@ -53,7 +55,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("{id:int}")]
         [EndpointSummary("Get project by id")]
         [EndpointDescription("Returns a single active project by id.")]
-        [ProducesResponseType(typeof(ApiResponse<ProjectReadModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<ProjectReadModel>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<ProjectReadModel>>> GetById(
             int id,
             CancellationToken ct)
@@ -68,7 +72,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpGet("workspace/{workspaceId:int}")]
         [EndpointSummary("List projects by workspace")]
         [EndpointDescription("Returns all active projects for a workspace.")]
-        [ProducesResponseType(typeof(ApiResponse<IReadOnlyCollection<ProjectReadModel>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<ProjectReadModel>>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<IReadOnlyCollection<ProjectReadModel>>>> ListByWorkspace(
             int workspaceId,
             CancellationToken ct)
@@ -83,7 +89,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPut("{id:int}")]
         [EndpointSummary("Update project")]
         [EndpointDescription("Updates an existing project.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Update(
             int id,
             UpdateProjectRequest request,
@@ -105,7 +113,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/remove")]
         [EndpointSummary("Remove project")]
         [EndpointDescription("Soft deletes an existing project.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Remove(
             int id,
             CancellationToken ct)
@@ -120,7 +130,9 @@ namespace ChronoTrack.Api.Controllers
         [HttpPatch("{id:int}/restore")]
         [EndpointSummary("Restore project")]
         [EndpointDescription("Restores a previously removed project.")]
-        [ProducesResponseType(typeof(ApiResponse<int>), StatusCodes.Status200OK)]
+        [ProducesResponseType(
+            typeof(ApiResponse<int>),
+            StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse<int>>> Restore(
             int id,
             CancellationToken ct)

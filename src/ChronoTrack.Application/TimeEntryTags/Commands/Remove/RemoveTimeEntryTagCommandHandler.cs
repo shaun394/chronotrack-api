@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.TimeEntryTags.Commands.Remove
     public sealed class RemoveTimeEntryTagCommandHandler
         : IRequestHandler<RemoveTimeEntryTagCommand, int>
     {
-        private readonly ITimeEntryTagWriteRepository _timeEntryTagWriteRepository;
+        private readonly ITimeEntryTagWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RemoveTimeEntryTagCommandHandler(
-            ITimeEntryTagWriteRepository timeEntryTagWriteRepository,
+            ITimeEntryTagWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _timeEntryTagWriteRepository = timeEntryTagWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,13 +24,13 @@ namespace ChronoTrack.Application.TimeEntryTags.Commands.Remove
             RemoveTimeEntryTagCommand command,
             CancellationToken ct)
         {
-            var timeEntryTag = await _timeEntryTagWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(
                     command.TimeEntryId,
                     command.TagId,
                     ct);
 
-            if (timeEntryTag is null || timeEntryTag.IsRemoved)
+            if (result is null || result.IsRemoved)
             {
                 throw new NotFoundException(
                     nameof(TimeEntryTag),
@@ -38,13 +38,13 @@ namespace ChronoTrack.Application.TimeEntryTags.Commands.Remove
                     nameof(RemoveTimeEntryTagCommandHandler));
             }
 
-            timeEntryTag.Remove(
+            result.Remove(
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return timeEntryTag.Id;
+            return result.Id;
         }
     }
 }

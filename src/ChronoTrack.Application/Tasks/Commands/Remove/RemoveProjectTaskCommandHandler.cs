@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Tasks.Commands.Remove
     public sealed class RemoveProjectTaskCommandHandler
         : IRequestHandler<RemoveProjectTaskCommand, int>
     {
-        private readonly IProjectTaskWriteRepository _projectTaskWriteRepository;
+        private readonly IProjectTaskWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public RemoveProjectTaskCommandHandler(
-            IProjectTaskWriteRepository projectTaskWriteRepository,
+            IProjectTaskWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _projectTaskWriteRepository = projectTaskWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Tasks.Commands.Remove
             RemoveProjectTaskCommand command,
             CancellationToken ct)
         {
-            var projectTask = await _projectTaskWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (projectTask is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(ProjectTask),
@@ -35,13 +35,13 @@ namespace ChronoTrack.Application.Tasks.Commands.Remove
                     nameof(RemoveProjectTaskCommandHandler));
             }
 
-            projectTask.Remove(
+            result.Remove(
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return projectTask.Id;
+            return result.Id;
         }
     }
 }

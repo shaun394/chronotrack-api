@@ -9,20 +9,22 @@ namespace ChronoTrack.Application.Projects.Queries.ListByWorkspace
             ListProjectsByWorkspaceQuery,
             IReadOnlyCollection<ProjectReadModel>>
     {
-        private readonly IProjectReadRepository _projectReadRepository;
+        private readonly IProjectReadRepository _repository;
 
         public ListProjectsByWorkspaceQueryHandler(
-            IProjectReadRepository projectReadRepository)
+            IProjectReadRepository repository)
         {
-            _projectReadRepository = projectReadRepository;
+            _repository = repository;
         }
 
         public async Task<IReadOnlyCollection<ProjectReadModel>> Handle(
             ListProjectsByWorkspaceQuery query,
             CancellationToken ct)
         {
-            return await _projectReadRepository
+            var result = await _repository
                 .ListByWorkspaceAsync(query.WorkspaceId, ct);
+
+            return result;
         }
     }
 }

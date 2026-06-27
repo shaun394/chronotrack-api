@@ -9,14 +9,14 @@ namespace ChronoTrack.Application.Tasks.Commands.Update
     public sealed class UpdateProjectTaskCommandHandler
         : IRequestHandler<UpdateProjectTaskCommand, int>
     {
-        private readonly IProjectTaskWriteRepository _projectTaskWriteRepository;
+        private readonly IProjectTaskWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateProjectTaskCommandHandler(
-            IProjectTaskWriteRepository projectTaskWriteRepository,
+            IProjectTaskWriteRepository repository,
             IUnitOfWork unitOfWork)
         {
-            _projectTaskWriteRepository = projectTaskWriteRepository;
+            _repository = repository;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,10 +24,10 @@ namespace ChronoTrack.Application.Tasks.Commands.Update
             UpdateProjectTaskCommand command,
             CancellationToken ct)
         {
-            var projectTask = await _projectTaskWriteRepository
+            var result = await _repository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (projectTask is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(ProjectTask),
@@ -35,7 +35,7 @@ namespace ChronoTrack.Application.Tasks.Commands.Update
                     nameof(UpdateProjectTaskCommandHandler));
             }
 
-            projectTask.Update(
+            result.Update(
                 command.Name,
                 command.Description,
                 command.IsBillable,
@@ -44,7 +44,7 @@ namespace ChronoTrack.Application.Tasks.Commands.Update
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return projectTask.Id;
+            return result.Id;
         }
     }
 }

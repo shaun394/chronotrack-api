@@ -29,10 +29,10 @@ namespace ChronoTrack.Application.Projects.Commands.Update
             UpdateProjectCommand command,
             CancellationToken ct)
         {
-            var project = await _projectWriteRepository
+            var result = await _projectWriteRepository
                 .GetForUpdateAsync(command.Id, ct);
 
-            if (project is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Project),
@@ -54,7 +54,7 @@ namespace ChronoTrack.Application.Projects.Commands.Update
                 }
             }
 
-            project.Update(
+            result.Update(
                 command.ClientId,
                 command.Name,
                 command.Description,
@@ -64,7 +64,7 @@ namespace ChronoTrack.Application.Projects.Commands.Update
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return project.Id;
+            return result.Id;
         }
     }
 }

@@ -9,22 +9,22 @@ namespace ChronoTrack.Application.Tasks.Queries.GetById
     public sealed class GetProjectTaskByIdQueryHandler
         : IRequestHandler<GetProjectTaskByIdQuery, ProjectTaskReadModel>
     {
-        private readonly IProjectTaskReadRepository _projectTaskReadRepository;
+        private readonly IProjectTaskReadRepository _repository;
 
         public GetProjectTaskByIdQueryHandler(
-            IProjectTaskReadRepository projectTaskReadRepository)
+            IProjectTaskReadRepository repository)
         {
-            _projectTaskReadRepository = projectTaskReadRepository;
+            _repository = repository;
         }
 
         public async Task<ProjectTaskReadModel> Handle(
             GetProjectTaskByIdQuery query,
             CancellationToken ct)
         {
-            var projectTask = await _projectTaskReadRepository
+            var result = await _repository
                 .GetByIdAsync(query.Id, ct);
 
-            if (projectTask is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(ProjectTask),
@@ -32,7 +32,7 @@ namespace ChronoTrack.Application.Tasks.Queries.GetById
                     nameof(GetProjectTaskByIdQueryHandler));
             }
 
-            return projectTask;
+            return result;
         }
     }
 }

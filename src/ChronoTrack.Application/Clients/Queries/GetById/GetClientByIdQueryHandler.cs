@@ -9,22 +9,22 @@ namespace ChronoTrack.Application.Clients.Queries.GetById
     public sealed class GetClientByIdQueryHandler
         : IRequestHandler<GetClientByIdQuery, ClientReadModel>
     {
-        private readonly IClientReadRepository _clientReadRepository;
+        private readonly IClientReadRepository _repository;
 
         public GetClientByIdQueryHandler(
-            IClientReadRepository clientReadRepository)
+            IClientReadRepository repository)
         {
-            _clientReadRepository = clientReadRepository;
+            _repository = repository;
         }
 
         public async Task<ClientReadModel> Handle(
             GetClientByIdQuery query,
             CancellationToken ct)
         {
-            var client = await _clientReadRepository
+            var result = await _repository
                 .GetByIdAsync(query.Id, ct);
 
-            if (client is null)
+            if (result is null)
             {
                 throw new NotFoundException(
                     nameof(Client),
@@ -32,7 +32,7 @@ namespace ChronoTrack.Application.Clients.Queries.GetById
                     nameof(GetClientByIdQueryHandler));
             }
 
-            return client;
+            return result;
         }
     }
 }

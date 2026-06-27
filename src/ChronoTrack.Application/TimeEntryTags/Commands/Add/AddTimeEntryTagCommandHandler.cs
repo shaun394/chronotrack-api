@@ -88,17 +88,17 @@ namespace ChronoTrack.Application.TimeEntryTags.Commands.Add
                 return existingTimeEntryTag.Id;
             }
 
-            var timeEntryTag = TimeEntryTag.Create(
+            var result = TimeEntryTag.Create(
                 timeEntry.WorkspaceId,
                 command.TimeEntryId,
                 command.TagId,
                 command.Actor,
                 DateTimeOffset.UtcNow);
 
-            await _timeEntryTagWriteRepository.AddAsync(timeEntryTag, ct);
+            await _timeEntryTagWriteRepository.AddAsync(result, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return timeEntryTag.Id;
+            return result.Id;
         }
     }
 }
