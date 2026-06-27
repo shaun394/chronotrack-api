@@ -1,5 +1,5 @@
-﻿using ChronoTrack.Api.Requests.Tasks;
-using ChronoTrack.Api.Responses;
+﻿using ChronoTrack.Api.Common.Responses;
+using ChronoTrack.Api.Requests.Tasks;
 using ChronoTrack.Application.ReadModels.Tasks;
 using ChronoTrack.Application.Tasks.Commands.Create;
 using ChronoTrack.Application.Tasks.Commands.Remove;
@@ -32,7 +32,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status201Created)]
-        public async Task<ActionResult<ApiResponse<int>>> Create(
+        public async Task<IActionResult> CreateAsync(
             CreateProjectTaskRequest request,
             CancellationToken ct)
         {
@@ -45,10 +45,11 @@ namespace ChronoTrack.Api.Controllers
                     Actor),
                 ct);
 
-            return CreatedAtAction(
-                nameof(GetById),
+            return ApiResponseFactory.Created(
+                nameof(GetByIdAsync),
+                ControllerContext.ActionDescriptor.ControllerName,
                 new { id },
-                ApiResponse<int>.Ok(id));
+                new { id });
         }
 
         [HttpGet("{id:int}")]
@@ -57,15 +58,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<ProjectTaskReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<ProjectTaskReadModel>>> GetById(
+        public async Task<IActionResult> GetByIdAsync(
             int id,
             CancellationToken ct)
         {
-            var projectTask = await _mediator.Send(
+            var response = await _mediator.Send(
                 new GetProjectTaskByIdQuery(id),
                 ct);
 
-            return Ok(ApiResponse<ProjectTaskReadModel>.Ok(projectTask));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpGet("project/{projectId:int}")]
@@ -74,15 +75,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<IReadOnlyCollection<ProjectTaskReadModel>>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<IReadOnlyCollection<ProjectTaskReadModel>>>> ListByProject(
+        public async Task<IActionResult> ListByProjectAsync(
             int projectId,
             CancellationToken ct)
         {
-            var projectTasks = await _mediator.Send(
+            var response = await _mediator.Send(
                 new ListProjectTasksByProjectQuery(projectId),
                 ct);
 
-            return Ok(ApiResponse<IReadOnlyCollection<ProjectTaskReadModel>>.Ok(projectTasks));
+            return ApiResponseFactory.Ok(response);
         }
 
         [HttpPut("{id:int}")]
@@ -91,12 +92,12 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Update(
+        public async Task<IActionResult> UpdateAsync(
             int id,
             UpdateProjectTaskRequest request,
             CancellationToken ct)
         {
-            int projectTaskId = await _mediator.Send(
+            await _mediator.Send(
                 new UpdateProjectTaskCommand(
                     id,
                     request.Name,
@@ -105,7 +106,7 @@ namespace ChronoTrack.Api.Controllers
                     Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(projectTaskId));
+            return ApiResponseFactory.NoContent();
         }
 
         [HttpPatch("{id:int}/remove")]
@@ -114,15 +115,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Remove(
+        public async Task<IActionResult> RemoveAsync(
             int id,
             CancellationToken ct)
         {
-            int projectTaskId = await _mediator.Send(
+            await _mediator.Send(
                 new RemoveProjectTaskCommand(id, Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(projectTaskId));
+            return ApiResponseFactory.NoContent();
         }
 
         [HttpPatch("{id:int}/restore")]
@@ -131,15 +132,15 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<int>),
             StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<int>>> Restore(
+        public async Task<IActionResult> Restore(
             int id,
             CancellationToken ct)
         {
-            int projectTaskId = await _mediator.Send(
+            await _mediator.Send(
                 new RestoreProjectTaskCommand(id, Actor),
                 ct);
 
-            return Ok(ApiResponse<int>.Ok(projectTaskId));
+            return ApiResponseFactory.NoContent();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ChronoTrack.Api.Responses;
+﻿using ChronoTrack.Api.Common.Responses;
+using ChronoTrack.Api.Common.Responses.Common;
 using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Domain.Common.Exceptions;
 using FluentValidation;
@@ -52,9 +53,11 @@ namespace ChronoTrack.Api.Middleware
             httpContext.Response.StatusCode = (int)statusCode;
             httpContext.Response.ContentType = "application/json";
 
-            var response = ex is ValidationException validationException
+            object response = ex is ValidationException validationException
                 ? BuildValidationResponse(validationException)
-                : ApiResponse<object>.Fail(ex.Message);
+                : BuildErrorResponse(
+                    (int)statusCode,
+                    ex.Message);
 
             await httpContext.Response.WriteAsJsonAsync(response);
         }
@@ -63,16 +66,35 @@ namespace ChronoTrack.Api.Middleware
             ValidationException validationException)
         {
             var errors = validationException.Errors
-                .Select(error => new ApiError
-                {
-                    Field = error.PropertyName,
-                    Message = error.ErrorMessage
-                })
+                .Select(error => $"{error.PropertyName}: {error.ErrorMessage}")
                 .ToList();
 
-            return ApiResponse<object>.Fail(
+            var exceptionResponse = new ExceptionResponse(
+                StatusCodes.Status400BadRequest,
                 "Validation failed.",
+                null,
                 errors);
+
+            return ApiResponse<object>.ErrorResponse(
+                StatusCodes.Status400BadRequest,
+                "Validation failed.",
+                exceptionResponse);
+        }
+
+        private static ApiResponse<object> BuildErrorResponse(
+            int statusCode,
+            string message)
+        {
+            var exceptionResponse = new ExceptionResponse(
+                statusCode,
+                message,
+                null,
+                null);
+
+            return ApiResponse<object>.ErrorResponse(
+                statusCode,
+                message,
+                exceptionResponse);
         }
     }
 }
