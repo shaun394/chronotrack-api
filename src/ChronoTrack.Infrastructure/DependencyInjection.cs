@@ -1,4 +1,5 @@
 ﻿using ChronoTrack.Application.Common.Interfaces;
+using ChronoTrack.Application.Interfaces.Repositories.Audit;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Application.Interfaces.Repositories.Reports;
@@ -7,7 +8,10 @@ using ChronoTrack.Application.Interfaces.Repositories.Tasks;
 using ChronoTrack.Application.Interfaces.Repositories.TimeEntries;
 using ChronoTrack.Application.Interfaces.Repositories.TimeEntryTags;
 using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
+using ChronoTrack.Infrastructure.EventStore;
 using ChronoTrack.Infrastructure.Persistence;
+using ChronoTrack.Infrastructure.Persistence.Projections;
+using ChronoTrack.Infrastructure.Persistence.Repositories.Audit;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Clients;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Projects;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Reports;
@@ -16,6 +20,8 @@ using ChronoTrack.Infrastructure.Persistence.Repositories.Tasks;
 using ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries;
 using ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntryTags;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces;
+using JasperFx;
+using Marten;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +42,19 @@ namespace ChronoTrack.Infrastructure
                 options.UseNpgsql(connectionString);
             });
 
+            services
+                .AddMarten(options =>
+                {
+                    options.Connection(connectionString);
+
+                    options.AutoCreateSchemaObjects = AutoCreate.All;
+                    options.Events.StreamIdentity = JasperFx.Events.StreamIdentity.AsString;
+                })
+                .UseLightweightSessions();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IEventStore, MartenEventStore>();
+
             services.AddScoped<IWorkspaceWriteRepository, WorkspaceWriteRepository>();
             services.AddScoped<IWorkspaceReadRepository, WorkspaceReadRepository>();
             services.AddScoped<IClientWriteRepository, ClientWriteRepository>();
@@ -52,6 +70,9 @@ namespace ChronoTrack.Infrastructure
             services.AddScoped<ITimeEntryTagWriteRepository, TimeEntryTagWriteRepository>();
             services.AddScoped<ITimeEntryTagReadRepository, TimeEntryTagReadRepository>();
             services.AddScoped<IReportReadRepository, ReportReadRepository>();
+
+            services.AddScoped<WorkspaceAuditProjection>();
+            services.AddScoped<IWorkspaceAuditReadRepository, WorkspaceAuditReadRepository>();
 
             return services;
         }
