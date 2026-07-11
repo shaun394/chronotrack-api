@@ -15,26 +15,14 @@ namespace ChronoTrack.Infrastructure.EventStore
 
         public async Task AppendAsync(
             string streamId,
-            DomainEvent domainEvent,
-            CancellationToken ct)
+            object @event,
+            CancellationToken ct = default)
         {
             _session.Events.Append(
                 streamId,
-                domainEvent);
+                @event);
 
             await _session.SaveChangesAsync(ct);
-        }
-
-        public async Task<IReadOnlyCollection<DomainEvent>> FetchStreamAsync(
-            string streamId,
-            CancellationToken ct)
-        {
-            var events = await _session.Events
-                .FetchStreamAsync(streamId, token: ct);
-
-            return events
-                .Select(x => (DomainEvent)x.Data)
-                .ToList();
         }
     }
 }

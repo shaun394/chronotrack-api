@@ -6,11 +6,7 @@ namespace ChronoTrack.Application.Common.Interfaces
     {
         Task AppendAsync(
             string streamId,
-            DomainEvent domainEvent,
-            CancellationToken ct);
-
-        Task<IReadOnlyCollection<DomainEvent>> FetchStreamAsync(
-            string streamId,
+            object @event,
             CancellationToken ct);
     }
 }

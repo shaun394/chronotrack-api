@@ -1,6 +1,5 @@
 ﻿using ChronoTrack.Api.Common.Responses;
 using ChronoTrack.Api.Requests.Workspaces;
-using ChronoTrack.Application.ReadModels.Audit.Workspaces;
 using ChronoTrack.Application.ReadModels.Workspaces;
 using ChronoTrack.Application.Workspaces.Commands.Create;
 using ChronoTrack.Application.Workspaces.Commands.Remove;
@@ -46,7 +45,7 @@ namespace ChronoTrack.Api.Controllers
                 ct);
 
             return ApiResponseFactory.Created(
-                nameof(GetByIdAsync),
+                nameof(GetById),
                 ControllerContext.ActionDescriptor.ControllerName,
                 new { id },
                 new { id });
@@ -74,7 +73,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<WorkspaceReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(
+        public async Task<IActionResult> GetById(
             int id,
             CancellationToken ct)
         {
@@ -152,7 +151,7 @@ namespace ChronoTrack.Api.Controllers
             CancellationToken ct)
         {
             var response = await _mediator.Send(
-                new ListWorkspaceAuditEventsQuery(id),
+                new ListWorkspaceAuditEventsQuery(Id: id),
                 ct);
 
             return ApiResponseFactory.Ok(response);

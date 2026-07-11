@@ -1,74 +1,110 @@
-﻿using ChronoTrack.Application.ReadModels.Audit.Workspaces;
-using ChronoTrack.Domain.Common;
+﻿using ChronoTrack.Application.ReadModels.Workspaces;
 using ChronoTrack.Domain.Events.Workspaces;
+using Marten.Events.Projections;
 
 namespace ChronoTrack.Infrastructure.Persistence.Projections
 {
     public sealed class WorkspaceAuditProjection
+        : MultiStreamProjection<WorkspaceAuditReadModel, int>
     {
-        public IReadOnlyCollection<WorkspaceAuditReadModel> Project(
-            IReadOnlyCollection<DomainEvent> domainEvents)
+        public WorkspaceAuditProjection()
         {
-            var result = new List<WorkspaceAuditReadModel>();
-            int version = 1;
+            Identity<WorkspaceCreated>(x => x.Id);
+            Identity<WorkspaceUpdated>(x => x.Id);
+            Identity<WorkspaceRemoved>(x => x.Id);
+            Identity<WorkspaceRestored>(x => x.Id);
+        }
 
-            foreach (var domainEvent in domainEvents)
+        public WorkspaceAuditReadModel Create(WorkspaceCreated @event)
+        {
+            return new WorkspaceAuditReadModel
             {
-                WorkspaceAuditReadModel? readModel = domainEvent switch
-                {
-                    WorkspaceCreated workspaceCreated => new WorkspaceAuditReadModel
+                Id = @event.Id,
+                Name = @event.Name,
+                Description = @event.Description,
+                CreatedBy = @event.Actor,
+                CreatedAt = @event.OccurredAt,
+                Entries =
+                [
+                    new WorkspaceAuditEntry
                     {
-                        Version = version,
                         EventType = nameof(WorkspaceCreated),
-                        WorkspaceId = workspaceCreated.WorkspaceId,
-                        Name = workspaceCreated.Name,
-                        Actor = workspaceCreated.Actor,
-                        OccurredAt = workspaceCreated.OccurredAt
-                    },
+                        Actor = @event.Actor,
+                        OccurredAt = @event.OccurredAt,
+                        Changes = new Dictionary<string, string?>
+                        {
+                            ["Name"] = @event.Name,
+                            ["Description"] = @event.Description
+                        }
+                    }
+                ]
+            };
+        }
 
-                    WorkspaceUpdated workspaceUpdated => new WorkspaceAuditReadModel
-                    {
-                        Version = version,
-                        EventType = nameof(WorkspaceUpdated),
-                        WorkspaceId = workspaceUpdated.WorkspaceId,
-                        Name = workspaceUpdated.Name,
-                        Actor = workspaceUpdated.Actor,
-                        OccurredAt = workspaceUpdated.OccurredAt
-                    },
+        public void Apply(
+            WorkspaceUpdated @event,
+            WorkspaceAuditReadModel model)
+        {
+            model.Name = @event.Name;
+            model.Description = @event.Description;
+            model.ModifiedBy = @event.Actor;
+            model.ModifiedAt = @event.OccurredAt;
 
-                    WorkspaceRemoved workspaceRemoved => new WorkspaceAuditReadModel
-                    {
-                        Version = version,
-                        EventType = nameof(WorkspaceRemoved),
-                        WorkspaceId = workspaceRemoved.WorkspaceId,
-                        Name = null,
-                        Actor = workspaceRemoved.Actor,
-                        OccurredAt = workspaceRemoved.OccurredAt
-                    },
-
-                    WorkspaceRestored workspaceRestored => new WorkspaceAuditReadModel
-                    {
-                        Version = version,
-                        EventType = nameof(WorkspaceRestored),
-                        WorkspaceId = workspaceRestored.WorkspaceId,
-                        Name = null,
-                        Actor = workspaceRestored.Actor,
-                        OccurredAt = workspaceRestored.OccurredAt
-                    },
-
-                    _ => null
-                };
-
-                if (readModel is null)
+            model.Entries.Add(new WorkspaceAuditEntry
+            {
+                EventType = nameof(WorkspaceUpdated),
+                Actor = @event.Actor,
+                OccurredAt = @event.OccurredAt,
+                Changes = new Dictionary<string, string?>
                 {
-                    continue;
+                    ["Name"] = @event.Name,
+                    ["Description"] = @event.Description
                 }
+            });
+        }
 
-                result.Add(readModel);
-                version++;
-            }
+        public void Apply(
+            WorkspaceRemoved @event,
+            WorkspaceAuditReadModel model)
+        {
+            model.RemovedBy = @event.Actor;
+            model.RemovedAt = @event.OccurredAt;
+            model.ModifiedBy = @event.Actor;
+            model.ModifiedAt = @event.OccurredAt;
 
-            return result;
+            model.Entries.Add(new WorkspaceAuditEntry
+            {
+                EventType = nameof(WorkspaceRemoved),
+                Actor = @event.Actor,
+                OccurredAt = @event.OccurredAt,
+                Changes = new Dictionary<string, string?>
+                {
+                    ["RemovedAt"] = @event.OccurredAt.ToString("O")
+                }
+            });
+        }
+
+        public void Apply(
+            WorkspaceRestored @event,
+            WorkspaceAuditReadModel model)
+        {
+            model.RemovedBy = null;
+            model.RemovedAt = null;
+            model.RestoredBy = @event.Actor;
+            model.RestoredAt = @event.OccurredAt;
+            model.ModifiedBy = @event.Actor;
+            model.ModifiedAt = @event.OccurredAt;
+
+            model.Entries.Add(new WorkspaceAuditEntry
+            {
+                EventType = nameof(WorkspaceRestored),
+                Actor = @event.Actor,
+                OccurredAt = @event.OccurredAt,
+                Changes = new Dictionary<string, string?>
+                {
+                    ["RestoredAt"] = @event.OccurredAt.ToString("O")
+                }
+            });
         }
     }
 }

@@ -35,8 +35,7 @@ namespace ChronoTrack.Domain.Workspaces
             string actor,
             DateTimeOffset now)
         {
-            ValidateName(name);
-            ValidateDescription(description);
+            Validate(name, description);
 
             return new Workspace(
                 name.Trim(),
@@ -58,8 +57,7 @@ namespace ChronoTrack.Domain.Workspaces
                     "Removed workspaces cannot be updated.");
             }
 
-            ValidateName(name);
-            ValidateDescription(description);
+            Validate(name, description);
 
             Name = name.Trim();
             Description = description?.Trim();
@@ -97,7 +95,9 @@ namespace ChronoTrack.Domain.Workspaces
             ModifiedAt = now;
         }
 
-        private static void ValidateName(string name)
+        private static void Validate(
+            string name,
+            string? description)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -112,10 +112,7 @@ namespace ChronoTrack.Domain.Workspaces
                     nameof(Workspace),
                     $"Workspace name cannot exceed {MaxNameLength} characters.");
             }
-        }
 
-        private static void ValidateDescription(string? description)
-        {
             if (description?.Trim().Length > MaxDescriptionLength)
             {
                 throw new DomainValidationException(

@@ -49,13 +49,14 @@ namespace ChronoTrack.Application.Workspaces.Commands.Update
             await _unitOfWork.SaveChangesAsync(ct);
 
             await _eventStore.AppendAsync(
-                EventStreamNames.Workspace(result.Id),
-                new WorkspaceUpdated
+                streamId: result.Id.ToString(),
+                @event: new WorkspaceUpdated
                 {
-                    WorkspaceId = result.Id,
+                    Id = result.Id,
                     Name = result.Name,
+                    Description = result.Description,
                     Actor = command.Actor,
-                    OccurredAt = DateTimeOffset.Now
+                    OccurredAt = DateTimeOffset.UtcNow
                 },
                 ct);
 

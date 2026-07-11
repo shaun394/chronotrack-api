@@ -38,11 +38,12 @@ namespace ChronoTrack.Application.Workspaces.Commands.Create
             await _unitOfWork.SaveChangesAsync(ct);
 
             await _eventStore.AppendAsync(
-                EventStreamNames.Workspace(result.Id),
-                new WorkspaceCreated
+                streamId: result.Id.ToString(),
+                @event: new WorkspaceCreated
                 {
-                    WorkspaceId = result.Id,
+                    Id = result.Id,
                     Name = result.Name,
+                    Description = result.Description,
                     Actor = command.Actor,
                     OccurredAt = DateTimeOffset.Now
                 },

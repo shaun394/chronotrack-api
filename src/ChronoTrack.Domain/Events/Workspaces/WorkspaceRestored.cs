@@ -4,6 +4,6 @@ namespace ChronoTrack.Domain.Events.Workspaces
 {
     public sealed record WorkspaceRestored : DomainEvent
     {
-        public required int WorkspaceId { get; init; }
+        public required int Id { get; init; }
     }
 }

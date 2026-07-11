@@ -1,28 +1,28 @@
-﻿using ChronoTrack.Application.Interfaces.Repositories.Audit;
-using ChronoTrack.Application.ReadModels.Audit.Workspaces;
+﻿using ChronoTrack.Application.ReadModels.Workspaces;
+using Marten;
 using MediatR;
 
 namespace ChronoTrack.Application.Workspaces.Queries.ListAudit
 {
     public sealed class ListWorkspaceAuditEventsQueryHandler
-        : IRequestHandler<ListWorkspaceAuditEventsQuery, IReadOnlyCollection<WorkspaceAuditReadModel>>
+        : IRequestHandler<
+            ListWorkspaceAuditEventsQuery,
+            WorkspaceAuditReadModel?>
     {
-        private readonly IWorkspaceAuditReadRepository _repository;
+        private readonly IDocumentSession _session;
 
         public ListWorkspaceAuditEventsQueryHandler(
-            IWorkspaceAuditReadRepository repository)
+            IDocumentSession session)
         {
-            _repository = repository;
+            _session = session;
         }
 
-        public async Task<IReadOnlyCollection<WorkspaceAuditReadModel>> Handle(
+        public async Task<WorkspaceAuditReadModel?> Handle(
             ListWorkspaceAuditEventsQuery query,
             CancellationToken ct)
         {
-            var result = await _repository
-                .ListByWorkspaceAsync(query.WorkspaceId, ct);
-
-            return result;
+            return await _session
+                .LoadAsync<WorkspaceAuditReadModel>(query.Id, ct);
         }
     }
 }

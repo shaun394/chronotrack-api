@@ -1,5 +1,4 @@
 ﻿using ChronoTrack.Application.Common.Interfaces;
-using ChronoTrack.Application.Interfaces.Repositories.Audit;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Application.Interfaces.Repositories.Reports;
@@ -11,7 +10,6 @@ using ChronoTrack.Application.Interfaces.Repositories.Workspaces;
 using ChronoTrack.Infrastructure.EventStore;
 using ChronoTrack.Infrastructure.Persistence;
 using ChronoTrack.Infrastructure.Persistence.Projections;
-using ChronoTrack.Infrastructure.Persistence.Repositories.Audit;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Clients;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Projects;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Reports;
@@ -21,6 +19,7 @@ using ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntries;
 using ChronoTrack.Infrastructure.Persistence.Repositories.TimeEntryTags;
 using ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces;
 using JasperFx;
+using JasperFx.Events.Projections;
 using Marten;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,16 +41,6 @@ namespace ChronoTrack.Infrastructure
                 options.UseNpgsql(connectionString);
             });
 
-            services
-                .AddMarten(options =>
-                {
-                    options.Connection(connectionString);
-
-                    options.AutoCreateSchemaObjects = AutoCreate.All;
-                    options.Events.StreamIdentity = JasperFx.Events.StreamIdentity.AsString;
-                })
-                .UseLightweightSessions();
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IEventStore, MartenEventStore>();
 
@@ -71,8 +60,18 @@ namespace ChronoTrack.Infrastructure
             services.AddScoped<ITimeEntryTagReadRepository, TimeEntryTagReadRepository>();
             services.AddScoped<IReportReadRepository, ReportReadRepository>();
 
-            services.AddScoped<WorkspaceAuditProjection>();
-            services.AddScoped<IWorkspaceAuditReadRepository, WorkspaceAuditReadRepository>();
+            services
+                .AddMarten(options =>
+                {
+                    options.Connection(connectionString);
+
+                    options.AutoCreateSchemaObjects = AutoCreate.All;
+                    options.Events.StreamIdentity = JasperFx.Events.StreamIdentity.AsString;
+            
+                    options.Projections.Add<WorkspaceAuditProjection>(ProjectionLifecycle.Inline);
+                })
+                .UseLightweightSessions();
+
 
             return services;
         }

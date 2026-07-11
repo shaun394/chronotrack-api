@@ -45,12 +45,12 @@ namespace ChronoTrack.Application.Workspaces.Commands.Restore
             await _unitOfWork.SaveChangesAsync(ct);
 
             await _eventStore.AppendAsync(
-                EventStreamNames.Workspace(result.Id),
-                new WorkspaceRestored
+                streamId: result.Id.ToString(),
+                @event: new WorkspaceRestored
                 {
-                    WorkspaceId = result.Id,
+                    Id = result.Id,
                     Actor = command.Actor,
-                    OccurredAt = DateTimeOffset.Now
+                    OccurredAt = DateTimeOffset.UtcNow
                 },
                 ct);
 

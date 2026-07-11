@@ -45,12 +45,12 @@ namespace ChronoTrack.Application.Workspaces.Commands.Remove
             await _unitOfWork.SaveChangesAsync(ct);
 
             await _eventStore.AppendAsync(
-                EventStreamNames.Workspace(result.Id),
-                new WorkspaceRemoved
+                streamId: result.Id.ToString(),
+                @event: new WorkspaceRemoved
                 {
-                    WorkspaceId = result.Id,
+                    Id = result.Id,
                     Actor = command.Actor,
-                    OccurredAt = DateTimeOffset.Now
+                    OccurredAt = DateTimeOffset.UtcNow
                 },
                 ct);
 
