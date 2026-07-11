@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Tags;
+using ChronoTrack.Domain.Events.Tags;
 using ChronoTrack.Domain.Tags;
 using MediatR;
 
@@ -11,13 +12,16 @@ namespace ChronoTrack.Application.Tags.Commands.Update
     {
         private readonly ITagWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEventStore _eventStore;
 
         public UpdateTagCommandHandler(
             ITagWriteRepository repository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEventStore eventStore)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _eventStore = eventStore;
         }
 
         public async Task<int> Handle(
@@ -41,6 +45,18 @@ namespace ChronoTrack.Application.Tags.Commands.Update
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
+
+            await _eventStore.AppendAsync(
+                streamId: result.Id.ToString(),
+                @event: new TagUpdated
+                {
+                    TagId = result.Id,
+                    WorkspaceId = result.WorkspaceId,
+                    Name = result.Name,
+                    Actor = command.Actor,
+                    OccurredAt = result.ModifiedAt
+                },
+                ct);
 
             return result.Id;
         }
