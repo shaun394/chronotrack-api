@@ -6,6 +6,7 @@ using ChronoTrack.Application.Tags.Commands.Remove;
 using ChronoTrack.Application.Tags.Commands.Restore;
 using ChronoTrack.Application.Tags.Commands.Update;
 using ChronoTrack.Application.Tags.Queries.GetById;
+using ChronoTrack.Application.Tags.Queries.ListAudit;
 using ChronoTrack.Application.Tags.Queries.ListByWorkspace;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace ChronoTrack.Api.Controllers
                 ct);
 
             return ApiResponseFactory.Created(
-                nameof(GetByIdAsync),
+                nameof(GetById),
                 ControllerContext.ActionDescriptor.ControllerName,
                 new { id },
                 new { id });
@@ -56,7 +57,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<TagReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(
+        public async Task<IActionResult> GetById(
             int id,
             CancellationToken ct)
         {
@@ -137,6 +138,23 @@ namespace ChronoTrack.Api.Controllers
                 ct);
 
             return ApiResponseFactory.NoContent();
+        }
+
+        [HttpGet("{id:int}/audit")]
+        [EndpointSummary("List tag audit events")]
+        [EndpointDescription("Returns the audit event history for a tag.")]
+        [ProducesResponseType(
+            typeof(ApiResponse<TagAuditReadModel>),
+            StatusCodes.Status200OK)]
+        public async Task<IActionResult> ListAuditAsync(
+            int id,
+            CancellationToken ct)
+        {
+            var response = await _mediator.Send(
+                new ListTagAuditEventsQuery(Id: id),
+                ct);
+
+            return ApiResponseFactory.Ok(response);
         }
     }
 }
