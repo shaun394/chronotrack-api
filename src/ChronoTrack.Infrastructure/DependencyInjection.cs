@@ -70,6 +70,7 @@ namespace ChronoTrack.Infrastructure
             
                     options.Projections.Add<WorkspaceAuditProjection>(ProjectionLifecycle.Inline);
                     options.Projections.Add<ClientAuditProjection>(ProjectionLifecycle.Inline);
+                    options.Projections.Add<ProjectAuditProjection>(ProjectionLifecycle.Inline);
                 })
                 .UseLightweightSessions();
 
