@@ -7,6 +7,7 @@ using ChronoTrack.Application.Workspaces.Commands.Restore;
 using ChronoTrack.Application.Workspaces.Commands.Update;
 using ChronoTrack.Application.Workspaces.Queries.GetById;
 using ChronoTrack.Application.Workspaces.Queries.List;
+using ChronoTrack.Application.Workspaces.Queries.ListAudit;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +45,7 @@ namespace ChronoTrack.Api.Controllers
                 ct);
 
             return ApiResponseFactory.Created(
-                nameof(GetByIdAsync),
+                nameof(GetById),
                 ControllerContext.ActionDescriptor.ControllerName,
                 new { id },
                 new { id });
@@ -72,7 +73,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<WorkspaceReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(
+        public async Task<IActionResult> GetById(
             int id,
             CancellationToken ct)
         {
@@ -137,6 +138,23 @@ namespace ChronoTrack.Api.Controllers
                 ct);
 
             return ApiResponseFactory.NoContent();
+        }
+
+        [HttpGet("{id:int}/audit")]
+        [EndpointSummary("List workspace audit events")]
+        [EndpointDescription("Returns the audit event history for a workspace.")]
+        [ProducesResponseType(
+            typeof(ApiResponse<IReadOnlyCollection<WorkspaceAuditReadModel>>),
+            StatusCodes.Status200OK)]
+        public async Task<IActionResult> ListAuditAsync(
+            int id,
+            CancellationToken ct)
+        {
+            var response = await _mediator.Send(
+                new ListWorkspaceAuditEventsQuery(Id: id),
+                ct);
+
+            return ApiResponseFactory.Ok(response);
         }
     }
 }

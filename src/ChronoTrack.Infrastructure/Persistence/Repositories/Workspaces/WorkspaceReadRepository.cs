@@ -22,12 +22,10 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces
                 .Where(x =>
                     x.Id == id
                     && x.RemovedAt == null)
-                .Select(x => new WorkspaceReadModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description
-                })
+                .Select(x => new WorkspaceReadModel(
+                    x.Id,
+                    x.Name,
+                    x.Description))
                 .FirstOrDefaultAsync(ct);
         }
 
@@ -38,12 +36,10 @@ namespace ChronoTrack.Infrastructure.Persistence.Repositories.Workspaces
                 .AsNoTracking()
                 .Where(x => x.RemovedAt == null)
                 .OrderBy(x => x.Name)
-                .Select(x => new WorkspaceReadModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Description = x.Description
-                })
+                .Select(x => new WorkspaceReadModel(
+                    x.Id,
+                    x.Name,
+                    x.Description))
                 .ToListAsync(ct);
         }
     }
