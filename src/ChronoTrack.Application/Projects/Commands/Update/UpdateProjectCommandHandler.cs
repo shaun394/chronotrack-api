@@ -3,6 +3,7 @@ using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Application.Interfaces.Repositories.Projects;
 using ChronoTrack.Domain.Clients;
+using ChronoTrack.Domain.Events.Project;
 using ChronoTrack.Domain.Projects;
 using MediatR;
 
@@ -14,15 +15,18 @@ namespace ChronoTrack.Application.Projects.Commands.Update
         private readonly IProjectWriteRepository _projectWriteRepository;
         private readonly IClientReadRepository _clientReadRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEventStore _eventStore;
 
         public UpdateProjectCommandHandler(
             IProjectWriteRepository projectWriteRepository,
             IClientReadRepository clientReadRepository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEventStore eventStore)
         {
             _projectWriteRepository = projectWriteRepository;
             _clientReadRepository = clientReadRepository;
             _unitOfWork = unitOfWork;
+            _eventStore = eventStore;
         }
 
         public async Task<int> Handle(
@@ -63,6 +67,21 @@ namespace ChronoTrack.Application.Projects.Commands.Update
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
+
+            await _eventStore.AppendAsync(
+                streamId: result.Id.ToString(),
+                @event: new ProjectUpdated
+                {
+                    ProjectId = result.Id,
+                    WorkspaceId = result.WorkspaceId,
+                    ClientId = result.ClientId,
+                    Name = result.Name,
+                    Description = result.Description,
+                    IsBillable = result.IsBillable,
+                    Actor = command.Actor,
+                    OccurredAt = result.ModifiedAt
+                },
+                ct);
 
             return result.Id;
         }
