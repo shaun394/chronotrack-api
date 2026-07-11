@@ -2,6 +2,7 @@
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Clients;
 using ChronoTrack.Domain.Clients;
+using ChronoTrack.Domain.Events.Clients;
 using MediatR;
 
 namespace ChronoTrack.Application.Clients.Commands.Update
@@ -11,13 +12,16 @@ namespace ChronoTrack.Application.Clients.Commands.Update
     {
         private readonly IClientWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEventStore _eventStore;
 
         public UpdateClientCommandHandler(
             IClientWriteRepository repository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEventStore eventStore)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _eventStore = eventStore;
         }
 
         public async Task<int> Handle(
@@ -41,6 +45,18 @@ namespace ChronoTrack.Application.Clients.Commands.Update
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
+
+            await _eventStore.AppendAsync(
+                streamId: result.Id.ToString(),
+                @event: new ClientCreated
+                {
+                    ClientId = result.Id,
+                    WorkspaceId = result.WorkspaceId,
+                    Name = result.Name,
+                    Actor = command.Actor,
+                    OccurredAt = result.CreatedAt
+                },
+                ct);
 
             return result.Id;
         }
