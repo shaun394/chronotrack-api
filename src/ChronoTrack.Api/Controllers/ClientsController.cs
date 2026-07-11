@@ -5,6 +5,7 @@ using ChronoTrack.Application.Clients.Commands.Remove;
 using ChronoTrack.Application.Clients.Commands.Restore;
 using ChronoTrack.Application.Clients.Commands.Update;
 using ChronoTrack.Application.Clients.Queries.GetById;
+using ChronoTrack.Application.Clients.Queries.ListAudit;
 using ChronoTrack.Application.Clients.Queries.ListByWorkspace;
 using ChronoTrack.Application.ReadModels.Clients;
 using MediatR;
@@ -44,7 +45,7 @@ namespace ChronoTrack.Api.Controllers
                 ct);
 
             return ApiResponseFactory.Created(
-                nameof(GetByIdAsync),
+                nameof(GetById),
                 ControllerContext.ActionDescriptor.ControllerName,
                 new { id },
                 new { id });
@@ -56,7 +57,7 @@ namespace ChronoTrack.Api.Controllers
         [ProducesResponseType(
             typeof(ApiResponse<ClientReadModel>),
             StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetByIdAsync(
+        public async Task<IActionResult> GetById(
             int id,
             CancellationToken ct)
         {
@@ -137,6 +138,23 @@ namespace ChronoTrack.Api.Controllers
                 ct);
 
             return ApiResponseFactory.NoContent();
+        }
+
+        [HttpGet("{id:int}/audit")]
+        [EndpointSummary("List client audit events")]
+        [EndpointDescription("Returns the audit event history for a client.")]
+        [ProducesResponseType(
+            typeof(ApiResponse<ClientAuditReadModel>),
+            StatusCodes.Status200OK)]
+        public async Task<IActionResult> ListAuditAsync(
+            int id,
+            CancellationToken ct)
+        {
+            var response = await _mediator.Send(
+                new ListClientAuditEventsQuery(Id: id),
+                ct);
+
+            return ApiResponseFactory.Ok(response);
         }
     }
 }

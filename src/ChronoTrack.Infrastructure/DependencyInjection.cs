@@ -69,6 +69,7 @@ namespace ChronoTrack.Infrastructure
                     options.Events.StreamIdentity = JasperFx.Events.StreamIdentity.AsString;
             
                     options.Projections.Add<WorkspaceAuditProjection>(ProjectionLifecycle.Inline);
+                    options.Projections.Add<ClientAuditProjection>(ProjectionLifecycle.Inline);
                 })
                 .UseLightweightSessions();
 
