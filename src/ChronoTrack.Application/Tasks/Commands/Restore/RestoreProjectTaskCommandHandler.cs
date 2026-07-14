@@ -1,6 +1,7 @@
 ﻿using ChronoTrack.Application.Common.Exceptions;
 using ChronoTrack.Application.Common.Interfaces;
 using ChronoTrack.Application.Interfaces.Repositories.Tasks;
+using ChronoTrack.Domain.Events.Tasks;
 using ChronoTrack.Domain.Tasks;
 using MediatR;
 
@@ -11,13 +12,16 @@ namespace ChronoTrack.Application.Tasks.Commands.Restore
     {
         private readonly IProjectTaskWriteRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEventStore _eventStore;
 
         public RestoreProjectTaskCommandHandler(
             IProjectTaskWriteRepository repository,
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            IEventStore eventStore)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            _eventStore = eventStore;
         }
 
         public async Task<int> Handle(
@@ -40,6 +44,17 @@ namespace ChronoTrack.Application.Tasks.Commands.Restore
                 DateTimeOffset.UtcNow);
 
             await _unitOfWork.SaveChangesAsync(ct);
+
+            await _eventStore.AppendAsync(
+                streamId: result.Id.ToString(),
+                @event: new ProjectTaskRestored
+                {
+                    ProjectTaskId = result.Id,
+                    ProjectId = result.ProjectId,
+                    Actor = command.Actor,
+                    OccurredAt = result.RestoredAt!.Value
+                },
+                ct);
 
             return result.Id;
         }
